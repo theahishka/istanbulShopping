@@ -1,0 +1,135 @@
+nav {
+    width: 100%;
+    height: 4rem;
+    background-color: hsl(168, 35%, 20%);
+    display: grid;
+    grid-template: 4rem / 25% 50% 25%;
+    border-bottom: 1px solid black;
+    font-family: "Poppins", sans-serif;
+    position: relative;
+    z-index: 5;
+    box-shadow: 5px 5px 5px 1px hsla(0, 0%, 0%, 0.3);
+
+    .burger {
+        width: 3rem;
+        height: 3rem;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-direction: column;
+        cursor: pointer;
+        align-self: center;
+        justify-self: center;
+
+        .line {
+            width: 2.5rem;
+            height: 2px;
+            background-color: white;
+            margin: 5px 0;
+            border-radius: 10px;
+            transition: transform 0.3s ease;
+        }
+    }
+
+    .logo {
+        width: 100px;
+        display: flex;
+        justify-self: center;
+        align-self: center;
+
+        img {
+            width: 100%;
+            height: auto;
+        }
+    }
+
+    .pc-sign-out {
+        display: none;
+        justify-content: center;
+        align-items: center;
+        justify-self: center;
+        align-self: center;
+        color: rgb(250, 106, 106);
+        cursor: pointer;
+        padding: 5px;
+
+        i {
+            margin-left: 0.5rem;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+    }
+
+    .pc-sign-out:hover {
+        color: hsl(41, 56%, 64%);
+    }
+}
+
+@media only screen and (min-width: 730px) {
+    nav {
+        .burger {
+            display: none;
+        }
+
+        .pc-sign-out {
+            display: flex;
+        }
+    }
+}
+
+@keyframes openBurger1 {
+    0% {
+        transform: translateY(0) rotateZ(0);
+    }
+
+    50% {
+        transform: translateY(6px);
+    }
+
+    100% {
+        transform: translateY(6px) rotateZ(45deg);
+    }
+}
+
+@keyframes openBurger2 {
+    0% {
+        transform: translateY(0) rotateZ(0);
+    }
+
+    50% {
+        transform: translateY(-6px);
+    }
+
+    100% {
+        transform: translateY(-6px) rotateZ(-45deg);
+    }
+}
+
+@keyframes closeBurger1 {
+    0% {
+        transform: translateY(6px) rotateZ(45deg);
+    }
+
+    50% {
+        transform: translateY(6px);
+    }
+
+    100% {
+        transform: translateY(0) rotateZ(0);
+    }
+}
+
+@keyframes closeBurger2 {
+    0% {
+        transform: translateY(-6px) rotateZ(-45deg);
+    }
+
+    50% {
+        transform: translateY(-6px);
+    }
+
+    100% {
+        transform: translateY(0) rotateZ(0);
+    }
+}

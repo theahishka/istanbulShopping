@@ -1,0 +1,23 @@
+.boxes-wrapper {
+    width: 100%;
+    margin: 0 auto;
+    padding: 0.5rem;
+    background-color: white;
+    border-top-left-radius: 15px;
+    border-bottom-left-radius: 15px;
+    border-bottom-right-radius: 15px;
+    position: relative;
+    z-index: 3;
+
+    .boxes-info {
+        margin-bottom: 0.5rem;
+
+        h4 {
+            font-size: 0.9rem;
+        }
+
+        span {
+            font-weight: 400;
+        }
+    }
+}

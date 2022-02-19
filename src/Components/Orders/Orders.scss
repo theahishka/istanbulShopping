@@ -1,0 +1,54 @@
+$orders-background-color: hsl(204, 95%, 85%);
+
+.orders-wrapper {
+    padding: 0.5rem;
+    background-color: $orders-background-color;
+    position: relative;
+
+    .orders {
+        width: 100%;
+        margin: 0rem auto;
+        font-family: "Poppins", sans-serif;
+        background-color: $orders-background-color;
+        box-shadow: 5px 5px 5px 1px hsla(0, 0%, 0%, 0.3);
+        border-radius: 15px;
+
+        .tabs {
+            width: 100%;
+            margin: 0 auto;
+            display: grid;
+            grid-template: 2.5rem / 1fr 1fr 1fr;
+            column-gap: 2px;
+
+            :nth-child(n) {
+                width: 100%;
+                text-align: center;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                cursor: pointer;
+                border-top-left-radius: 15px;
+                border-top-right-radius: 15px;
+                font-weight: 500;
+                background-color: hsl(168, 35%, 20%);
+                text-decoration: none;
+                color: white;
+            }
+
+            .tab-active {
+                color: hsl(168, 35%, 20%);
+                background-color: white;
+                border-bottom: none;
+            }
+        }
+    }
+
+    .design-extra-1 {
+        position: absolute;
+        width: calc(100% - 1rem);
+        height: 20px;
+        background-color: hsl(168, 35%, 20%);
+        top: 3rem;
+        z-index: 2;
+    }
+}

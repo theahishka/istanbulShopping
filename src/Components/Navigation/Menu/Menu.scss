@@ -1,0 +1,127 @@
+.menu {
+    display: block;
+    justify-content: center;
+    align-items: center;
+    position: absolute;
+    top: 4rem;
+    bottom: calc(-100vh + 4rem);
+    right: 0;
+    left: 0;
+    background-color: hsl(168, 35%, 20%);
+    transform: translateX(-100%);
+    transition: transform 0.3s ease;
+    z-index: 100;
+
+    ul {
+        width: 100%;
+        display: flex;
+        justify-content: space-around;
+        align-items: center;
+        list-style: none;
+        flex-direction: column;
+
+        hr {
+            width: 80%;
+            height: 1px;
+            border: none;
+            background-color: black;
+        }
+
+        li {
+            display: block;
+            width: 100%;
+            color: white;
+            cursor: pointer;
+            text-align: center;
+            font-size: 1.5rem;
+
+            :nth-child(1) {
+                display: block;
+                padding: 15px;
+                width: 100%;
+                text-decoration: none;
+                color: white;
+            }
+
+            :nth-child(1):hover {
+                color: hsl(168, 35%, 20%);
+                background-color: white;
+            }
+
+            .active-menu-link {
+                color: hsl(41, 56%, 64%);
+            }
+        }
+    }
+
+    .mobile-sign-out {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        font-size: 1.5rem;
+        padding: 15px;
+        cursor: pointer;
+        border-top: 1px solid black;
+        border-bottom: 1px solid black;
+        color: rgb(250, 106, 106);
+
+        i {
+            margin-left: 0.5rem;
+        }
+    }
+
+    .mobile-sign-out:hover {
+        color: hsl(168, 35%, 20%);
+        background-color: white;
+    }
+}
+
+.opened-menu {
+    transform: translateX(0);
+}
+
+@media only screen and (min-width: 500px) {
+    .menu {
+        right: 50%;
+        border-right: 1px solid black;
+    }
+}
+
+@media only screen and (min-width: 730px) {
+    .menu {
+        display: flex;
+        position: relative;
+        top: 0;
+        transform: translateX(0);
+        border-right: none;
+        border-bottom: 1px solid black;
+
+        ul {
+            flex-direction: row;
+            border: none;
+
+            hr {
+                display: none;
+            }
+
+            li {
+                display: list-item;
+                width: auto;
+                font-size: 1rem;
+
+                :nth-child(1) {
+                    padding: 5px;
+                }
+
+                :nth-child(1):hover {
+                    color: hsl(41, 56%, 64%);
+                    background-color: hsl(168, 35%, 20%);
+                }
+            }
+        }
+
+        .mobile-sign-out {
+            display: none;
+        }
+    }
+}
