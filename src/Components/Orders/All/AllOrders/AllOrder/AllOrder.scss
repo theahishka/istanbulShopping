@@ -1,175 +1,176 @@
 .all-order {
-    display: block;
-    border: 1px solid hsl(168, 35%, 20%);
-    border-radius: 15px;
-    background-color: white;
-    color: black;
-    text-decoration: none;
-    margin-bottom: 0.5rem;
-    position: relative;
-    overflow: hidden;
-    transition: max-height 0.4s ease;
-    max-height: 93px;
+	display: block;
+	border: 1px solid hsl(168, 35%, 20%);
+	border-radius: 15px;
+	background-color: white;
+	color: black;
+	text-decoration: none;
+	margin-bottom: 0.5rem;
+	position: relative;
+	overflow: hidden;
+	transition: max-height 0.4s ease;
+	max-height: 93px;
 
-    .order-overview {
-        position: absolute;
-        width: 100%;
-        padding: 0.5rem;
-        cursor: pointer;
-        opacity: 1;
-        transition: opacity 0.7s ease, transform 0.7s ease;
-        border-radius: 15px;
+	.order-overview {
+		position: absolute;
+		width: 100%;
+		padding: 0.5rem;
+		cursor: pointer;
+		opacity: 1;
+		transition: opacity 0.7s ease, transform 0.7s ease;
+		border-radius: 15px;
 
-        .order-number, .customer {
-            margin-bottom: 0.5rem;
-        }
+		.order-number,
+		.customer {
+			margin-bottom: 0.5rem;
+		}
 
-        p {
-            font-size: 0.8rem;
-            font-weight: bold;
-            position: absolute;
-            bottom: 0.5rem;
-            right: 0.5rem;
-        }
+		p {
+			font-size: 0.8rem;
+			font-weight: bold;
+			position: absolute;
+			bottom: 0.5rem;
+			right: 0.5rem;
+		}
 
-        span {
-            font-weight: 400;
-        }
+		span {
+			font-weight: 400;
+		}
 
-        .order-indicator {
-            width: 10px;
-            height: 10px;
-            border-radius: 50%;
-            position: absolute;
-            top: 0.5rem;
-            right: 0.5rem;
-        }
+		.order-indicator {
+			width: 10px;
+			height: 10px;
+			border-radius: 50%;
+			position: absolute;
+			top: 0.5rem;
+			right: 0.5rem;
+		}
 
-        :nth-child(n) {
-            pointer-events: none;
-        }
-    }
+		:nth-child(n) {
+			pointer-events: none;
+		}
+	}
 
-    .order-overview:hover {
-        background-color: hsl(204, 95%, 85%);
-    }
+	.order-overview:hover {
+		background-color: hsl(204, 95%, 85%);
+	}
 
-    .detailed-order {
-        padding: 0.5rem;
-        display: block;
-        opacity: 0;
-        transform: scale(0);
-        transition: opacity 0.7s ease, transform 0.7s ease;
+	.detailed-order {
+		padding: 0.5rem;
+		display: block;
+		opacity: 0;
+		transform: scale(0);
+		transition: opacity 0.7s ease, transform 0.7s ease;
 
-        .order-information {
-            h6 {
-                margin-left: 0.5rem;
-                margin-bottom: 0.5rem;
-                font-size: 0.65rem;
-            }
+		.order-information {
+			h6 {
+				margin-left: 0.5rem;
+				margin-bottom: 0.5rem;
+				font-size: 0.65rem;
+			}
 
-            h4 {
-                margin-bottom: 0.5rem;
-                text-align: center;
-            }
+			h4 {
+				margin-bottom: 0.5rem;
+				text-align: center;
+			}
 
-            h5 {
-                margin-bottom: 0.5rem;
-            }
+			h5 {
+				margin-bottom: 0.5rem;
+			}
 
-            .box-number {
-                text-decoration: underline;
-                text-underline-offset: 4px;
-                cursor: pointer;
-                pointer-events: auto;
-            }
+			.box-number {
+				text-decoration: underline;
+				text-underline-offset: 4px;
+				cursor: pointer;
+				pointer-events: auto;
+			}
 
-            .outstanding {
-                color: orange;
-            }
-        }
+			.outstanding {
+				color: orange;
+			}
+		}
 
-        .order-customer {
-            h4 {
-                margin-bottom: 0.5rem;
-                text-align: center;
-            }
+		.order-customer {
+			h4 {
+				margin-bottom: 0.5rem;
+				text-align: center;
+			}
 
-            h5 {
-                margin-bottom: 0.5rem;
-            }
+			h5 {
+				margin-bottom: 0.5rem;
+			}
 
-            .customer-name {
-                cursor: pointer;
-                text-underline-offset: 4px;
-                text-decoration: underline;
-                pointer-events: auto;
-            }
-        }
+			.customer-name {
+				cursor: pointer;
+				text-underline-offset: 4px;
+				text-decoration: underline;
+				pointer-events: auto;
+			}
+		}
 
-        .order-profit-breakdown {
-            h6 {
-                margin-left: 0.5rem;
-                margin-bottom: 0.5rem;
-                font-size: 0.65rem;
-            }
+		.order-profit-breakdown {
+			h6 {
+				margin-left: 0.5rem;
+				margin-bottom: 0.5rem;
+				font-size: 0.65rem;
+			}
 
-            h4 {
-                margin-bottom: 0.5rem;
-                text-align: center;
-            }
+			h4 {
+				margin-bottom: 0.5rem;
+				text-align: center;
+			}
 
-            .totals {
-                h5 {
-                    margin-bottom: 0.5rem;
-                }
+			.totals {
+				h5 {
+					margin-bottom: 0.5rem;
+				}
 
-                .total-revenue {
-                    color: green;
-                }
+				.total-revenue {
+					color: green;
+				}
 
-                .total-cost {
-                    color: red;
-                }
-            }
+				.total-cost {
+					color: red;
+				}
+			}
 
-            .show-details {
-                cursor: pointer;
-                text-align: center;
-                font-size: 0.7rem;
-                text-decoration: underline;
-                text-underline-offset: 4px;
-                margin-top: 0.5rem;
-                pointer-events: auto;
-            }
+			.show-details {
+				cursor: pointer;
+				text-align: center;
+				font-size: 0.7rem;
+				text-decoration: underline;
+				text-underline-offset: 4px;
+				margin-top: 0.5rem;
+				pointer-events: auto;
+			}
 
-            .detailed-profit-breakdown {
-                overflow: hidden;
-                transition: max-height 0.5s ease;
-                position: relative;
+			.detailed-profit-breakdown {
+				overflow: hidden;
+				transition: max-height 0.5s ease;
+				position: relative;
 
-                :last-child {
-                    margin-bottom: 0;
-                }
-            }
-        }
+				:last-child {
+					margin-bottom: 0;
+				}
+			}
+		}
 
-        span {
-            font-weight: 400;
-        }
+		span {
+			font-weight: 400;
+		}
 
-        .fa-times-circle {
-            font-size: 1.5rem;
-            color: hsl(168, 35%, 20%);
-            cursor: pointer;
-            position: absolute;
-            top: 10px;
-            right: 10px;
-            pointer-events: auto;
-        }
+		.fa-times-circle {
+			font-size: 1.5rem;
+			color: hsl(168, 35%, 20%);
+			cursor: pointer;
+			position: absolute;
+			top: 10px;
+			right: 10px;
+			pointer-events: auto;
+		}
 
-        .fa-times-circle:hover {
-            color: hsl(41, 56%, 64%);
-        }
-    }
+		.fa-times-circle:hover {
+			color: hsl(41, 56%, 64%);
+		}
+	}
 }

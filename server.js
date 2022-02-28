@@ -1,0 +1,22 @@
+const express = require("express");
+const app = express();
+const PORT = 4000;
+const morgan = require("morgan");
+const cors = require("cors");
+const bodyParser = require("body-parser");
+const errorhandler = require("errorhandler");
+const apiRouter = require("./api/api");
+
+app.use(cors());
+app.use(morgan("dev"));
+// bodyParser will be added later after some tests
+
+app.use("/api", apiRouter);
+
+app.use(errorhandler());
+
+app.listen(PORT, () => {
+	console.log(`Server listening on PORT ${PORT}`);
+});
+
+module.exports = app;

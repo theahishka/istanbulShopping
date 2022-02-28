@@ -1,8 +1,12 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import "./AllOrder.scss";
 import { Item } from "./Item/Item";
+import { istanbul } from "../../../../../utils/istanbul";
 
 function AllOrder(props) {
+	useEffect(() => {
+		istanbul.getOrders();
+	}, []);
 	const [detailedBreakdownOpened, setDetailedBreakdownOpened] =
 		useState(false);
 	const toggleDetailedBreakdown = (e) => {
@@ -19,7 +23,7 @@ function AllOrder(props) {
 					left: 0,
 					behavior: "smooth",
 				});
-			}, 1000);
+			}, 500);
 		} else {
 			setDetailedBreakdownOpened(true);
 
