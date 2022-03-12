@@ -12,6 +12,9 @@ $orders-background-color: hsl(204, 95%, 85%);
         background-color: $orders-background-color;
         box-shadow: 5px 5px 5px 1px hsla(0, 0%, 0%, 0.3);
         border-radius: 15px;
+        position: relative;
+        transition: opacity 0.5s ease;
+        opacity: 1;
 
         .tabs {
             width: 100%;
@@ -45,10 +48,10 @@ $orders-background-color: hsl(204, 95%, 85%);
 
     .design-extra-1 {
         position: absolute;
-        width: calc(100% - 1rem);
+        width: 100%;
         height: 20px;
         background-color: hsl(168, 35%, 20%);
-        top: 3rem;
+        top: 40px;
         z-index: 2;
     }
 }

@@ -1,0 +1,41 @@
+.new-payment {
+	border: 1px solid hsl(168, 35%, 20%);
+	border-radius: 15px;
+	padding: 0.5rem;
+	background-color: hsl(189, 100%, 78%);
+	margin-bottom: 0.5rem;
+    
+	h4 {
+		margin-bottom: 0.5rem;
+		text-align: center;
+	}
+
+    .payment-input-wrapper {
+		margin-bottom: 0.5rem;
+
+		.labels {
+			display: inline-block;
+			width: 40%;
+		}
+
+		.inputs {
+			padding-left: 0.3rem;
+			height: 1.5rem;
+			width: 60%;
+            border: 1px solid hsl(168, 35%, 20%);
+            border-radius: 3px;
+		}
+	}
+
+    :last-child {
+		margin-bottom: 0;
+	}
+
+    .delete-new-payment {
+        text-align: center;
+        color: red;
+        cursor: pointer;
+        text-decoration: underline;
+        text-underline-offset: 5px;
+    }
+}

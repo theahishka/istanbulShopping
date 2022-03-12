@@ -23,15 +23,15 @@ function Item(props) {
                 <h4 style={{marginBottom: "0"}}>Revenue: <span>{props.item.revenue}$</span></h4>
             </div>
             <div className="costs item-finance">
-                <h4>Costs: <span>{props.item.costs}$</span></h4>
+                <h4>Costs: <span>{props.item.item_costs}$</span></h4>
                 <h5>
-                    Item: <span>{props.item.itemCost}$</span>
+                    Item: <span>{props.item.item_cost}$</span>
                 </h5>
                 <h5>
-                    Delivery: <span>{props.item.deliveryCost}$</span>
+                    Delivery: <span>{props.item.item_delivery_cost}$</span>
                 </h5>
                 <h5>
-                    Airway: <span>{props.item.airwayCost}$</span>
+                    Airway: <span>{props.item.item_airway_cost}$</span>
                 </h5>
             </div>
             <div className="profit item-finance">

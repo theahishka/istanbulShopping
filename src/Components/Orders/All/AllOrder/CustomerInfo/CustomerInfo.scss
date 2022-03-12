@@ -1,0 +1,17 @@
+.order-customer {
+    h4 {
+        margin-bottom: 0.5rem;
+        text-align: center;
+    }
+
+    h5 {
+        margin-bottom: 0.5rem;
+    }
+
+    .customer-id {
+        cursor: pointer;
+        text-underline-offset: 4px;
+        text-decoration: underline;
+        pointer-events: auto;
+    }
+}

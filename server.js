@@ -9,7 +9,7 @@ const apiRouter = require("./api/api");
 
 app.use(cors());
 app.use(morgan("dev"));
-// bodyParser will be added later after some tests
+app.use(express.json());
 
 app.use("/api", apiRouter);
 
@@ -19,4 +19,4 @@ app.listen(PORT, () => {
 	console.log(`Server listening on PORT ${PORT}`);
 });
 
-module.exports = app;
+// module.exports = app;
