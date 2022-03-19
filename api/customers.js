@@ -9,6 +9,7 @@ const connection = {
 	database: "istanbul",
 };
 
+// Get all customers
 customersRouter.get("/", (req, res, next) => {
 	const pool = new Pool(connection);
 	pool.connect((err) => {
@@ -28,9 +29,9 @@ customersRouter.get("/", (req, res, next) => {
 	});
 });
 
+// Post new customer
 customersRouter.post("/", (req, res, next) => {
-	let date = new Date(Date.now());
-	let joinedDate = date.toLocaleDateString("fr-CA");
+	let joinedDate = new Date(Date.now());
 	const pool = new Pool(connection);
 	pool.connect();
 	pool.query(
@@ -50,7 +51,7 @@ customersRouter.post("/", (req, res, next) => {
 			pool.query(
 				"CREATE TABLE customer_" +
 					newCustomerId +
-					" (order_id integer NOT NULL, box_id integer NOT NULL, number_of_items integer NOT NULL, total_amount real NOT NULL, outstanding real NOT NULL, customer_id integer NOT NULL, customer_full_name text NOT NULL, pending text NOT NULL, number_of_payments integer, total_revenue real NOT NULL, total_costs real NOT NULL, total_item_cost real NOT NULL, total_delivery_cost real, total_airway_cost real, total_profit real NOT NULL, date_delivered date, date_created date NOT NULL)",
+					" (order_id integer NOT NULL, box_id integer NOT NULL, number_of_items integer NOT NULL, total_amount real NOT NULL, outstanding real NOT NULL, customer_id integer NOT NULL, customer_full_name text NOT NULL, pending text NOT NULL, number_of_payments integer, total_revenue real NOT NULL, total_costs real NOT NULL, total_item_cost real NOT NULL, total_delivery_cost real, total_airway_cost real, total_profit real NOT NULL, date_delivered timestamp with time zone, date_created timestamp with time zone NOT NULL)",
 				(err) => {
 					if (err) {
 						return console.log(err);

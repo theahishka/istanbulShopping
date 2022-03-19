@@ -21,6 +21,9 @@ function Totals(props) {
 			<h6>
 				Total Delivery:{" "}
 				<span>{props.orderInfo.total_delivery_cost}$</span>
+				{props.editMode ? (
+					<i className="fa-solid fa-pen edit-pen-icon"></i>
+				) : null}
 			</h6>
 			<h6>
 				Total Airway: <span>{props.orderInfo.total_airway_cost}$</span>

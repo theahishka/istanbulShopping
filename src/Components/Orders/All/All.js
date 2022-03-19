@@ -51,7 +51,13 @@ function All(props) {
 			<div className="all-orders">
 				{all.orders.map((order, index) => {
 					return (
-						<AllOrder orderInfo={order} key={`order${index + 1}`} />
+						<AllOrder
+							orderInfo={order}
+							orderOutletUpdater={props.orderOutletUpdater}
+							setOrderOutletUpdater={props.setOrderOutletUpdater}
+							key={`order${index + 1}`}
+							allOrderIndex={index}
+						/>
 					);
 				})}
 				<AllOrder orderInfo={all.orders[0]} />

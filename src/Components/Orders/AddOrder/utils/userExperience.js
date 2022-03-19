@@ -60,7 +60,10 @@ userExperience.openNewOrderForm = () => {
 	const ordersElement = document.querySelector(".orders");
 	ordersElement.style.opacity = "0";
 	function removeOrdersElement() {
-		ordersElement.style.display = "none";
+		// ordersElement.style.display = "none";
+		ordersElement.style.maxHeight = "100px";
+		ordersElement.style.pointerEvents = "none";
+		ordersElement.style.overflow = "hidden";
 		ordersElement.removeEventListener("transitionend", removeOrdersElement);
 	}
 	ordersElement.addEventListener("transitionend", removeOrdersElement);
@@ -85,9 +88,11 @@ userExperience.closeNewOrderForm = () => {
 		removeNewOrderFormElement
 	);
 
-	// Add back orders element
+	// Add back order elements
 	const ordersElement = document.querySelector(".orders");
-	ordersElement.style.display = "block";
+	ordersElement.style.maxHeight = "";
+	ordersElement.style.pointerEvents = "";
+	ordersElement.style.overflow = "";
 	setTimeout(() => {
 		ordersElement.style.opacity = "1";
 	}, 200);
@@ -518,6 +523,7 @@ userExperience.createNewOrder = (
 
 		setTimeout(() => {
 			istanbul.postNewOrder(newOrder).then((response) => {
+				userExperience.closeAllOrderDetails();
 				setNotifyCreation(true);
 				setLoading(false);
 				const newlyCreatedOrderId = document.querySelector(
@@ -568,9 +574,6 @@ userExperience.createNewOrder = (
 					} else {
 						setOutletUpdater(true);
 					}
-					setTimeout(() => {
-						userExperience.closeAllOrderDetails();
-					}, 5000);
 				}, 2000);
 			});
 		}, 400);

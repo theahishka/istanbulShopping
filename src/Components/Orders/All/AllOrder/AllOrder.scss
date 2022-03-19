@@ -22,6 +22,8 @@
 		width: 100%;
 
 		.order-profit-breakdown {
+			position: relative;
+
 			h6 {
 				margin-left: 0.5rem;
 				margin-bottom: 0.5rem;
@@ -42,16 +44,6 @@
 				margin-top: 0.5rem;
 				pointer-events: auto;
 			}
-
-			.detailed-profit-breakdown {
-				overflow: hidden;
-				transition: max-height 0.5s ease;
-				position: relative;
-
-				:last-child {
-					margin-bottom: 0;
-				}
-			}
 		}
 
 		span {
@@ -70,6 +62,25 @@
 
 		.fa-times-circle:hover {
 			color: hsl(41, 56%, 64%);
+		}
+
+		.toggle-edit-text {
+			cursor: pointer;
+			text-align: center;
+			font-size: 0.7rem;
+			text-decoration: underline;
+			text-underline-offset: 4px;
+			pointer-events: auto;
+			position: absolute;
+			top: 5px;
+			left: 0.5rem;
+			color: hsl(175, 23%, 32%);
+		}
+
+		.edit-pen-icon {
+			margin-left: 1rem;
+			cursor: pointer;
+			padding: 2px;
 		}
 	}
 

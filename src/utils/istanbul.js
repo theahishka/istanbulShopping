@@ -80,4 +80,109 @@ istanbul.postNewOrder = (newOrder) => {
 	});
 };
 
+istanbul.putCustomerInOrder = (
+	orderId,
+	updatedCustomerId,
+	oldCustomerId,
+	boxId
+) => {
+	const url = `${baseUrl}/orders/${orderId}/customer`;
+
+	return fetch(url, {
+		method: "PUT",
+		headers: {
+			"Content-Type": "application/json",
+		},
+		body: JSON.stringify({
+			updatedCustomerId: updatedCustomerId,
+			oldCustomerId: oldCustomerId,
+			boxId: boxId,
+		}),
+	});
+};
+
+istanbul.putBoxInOrder = (orderId, updatedBoxId, oldBoxId, customerId) => {
+	const url = `${baseUrl}/orders/${orderId}/box`;
+
+	return fetch(url, {
+		method: "PUT",
+		headers: {
+			"Content-Type": "application/json",
+		},
+		body: JSON.stringify({
+			updatedBoxId: updatedBoxId,
+			oldBoxId: oldBoxId,
+			customerId: customerId,
+		}),
+	});
+};
+
+istanbul.putDeliveredDateInOrder = (
+	orderId,
+	customerId,
+	boxId,
+	updatedDeliveredDate,
+	outstanding
+) => {
+	const url = `${baseUrl}/orders/${orderId}/delivered-date`;
+
+	return fetch(url, {
+		method: "PUT",
+		headers: {
+			"Content-Type": "application/json",
+		},
+		body: JSON.stringify({
+			customerId: customerId,
+			boxId: boxId,
+			updatedDeliveredDate: updatedDeliveredDate,
+			outstanding: outstanding,
+		}),
+	});
+};
+
+istanbul.postNewPayment = (orderId, amount) => {
+	const url = `${baseUrl}/orders/${orderId}/payment`;
+
+	return fetch(url, {
+		method: "POST",
+		headers: {
+			"Content-Type": "application/json",
+		},
+		body: JSON.stringify({
+			amount: amount,
+		}),
+	});
+};
+
+istanbul.putPaymentsInOrder = (orderId, amount, paymentId) => {
+	const url = `${baseUrl}/orders/${orderId}/payments`;
+
+	return fetch(url, {
+		method: "PUT",
+		headers: {
+			"Content-Type": "application/json",
+		},
+		body: JSON.stringify({
+			payment: {
+				amount: amount,
+				paymentId: paymentId,
+			},
+		}),
+	});
+};
+
+istanbul.deletePaymentInOrder = (orderId, paymentId) => {
+	const url = `${baseUrl}/orders/${orderId}/payment`;
+
+	return fetch(url, {
+		method: "DELETE",
+		headers: {
+			"Content-Type": "application/json",
+		},
+		body: JSON.stringify({
+			paymentId: paymentId,
+		}),
+	});
+};
+
 export { istanbul };

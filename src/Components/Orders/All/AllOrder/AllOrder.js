@@ -3,14 +3,16 @@ import "./AllOrder.scss";
 import { CustomerInfo } from "./CustomerInfo/CustomerInfo";
 import { OrderInfo } from "./OrderInfo/OrderInfo";
 import { Totals } from "./Totals/Totals";
-import { Item } from "./Item/Item";
+
 import { OrderOverview } from "./OrderOverview/OrderOverview";
 import { userExperience } from "./utils/userExperience";
 import { istanbul } from "../../../../utils/istanbul";
 import { LoadingSpinner } from "../../../utils/LoadingSpinner";
+import { Items } from "./Items/Items";
 
 function AllOrder(props) {
 	const [orderDetails, setOrderDetails] = useState(null);
+	const [editMode, setEditMode] = useState(false);
 
 	const [detailedProfitBreakdownOpened, setDetailedProfitBreakdownOpened] =
 		useState(false);
@@ -27,13 +29,13 @@ function AllOrder(props) {
 	let numberOfItems = props.orderInfo.number_of_items;
 	let numberOfPayments = props.orderInfo.number_of_payments;
 	let calculatedMaxHeight = 450 * numberOfItems + 24 * numberOfPayments;
-	let fixedMaxHeight = 0;
 
 	const closeOrderDetails = (e) => {
 		userExperience.closeOrderDetails(
 			e,
 			setDetailedProfitBreakdownOpened,
-			setOrderDetails
+			setOrderDetails,
+			editMode
 		);
 	};
 
@@ -60,32 +62,35 @@ function AllOrder(props) {
 				<div className="detailed-order">
 					<OrderInfo
 						orderInfo={props.orderInfo}
+						customerInfo={orderDetails.customerInfo}
 						paymentsInfo={orderDetails.paymentsInfo}
+						orderOutletUpdater={props.orderOutletUpdater}
+						setOrderOutletUpdater={props.setOrderOutletUpdater}
+						setOrderDetails={setOrderDetails}
+						allOrderIndex={props.allOrderIndex}
 					/>
-					<CustomerInfo customerInfo={orderDetails.customerInfo} />
+					<CustomerInfo
+						customerInfo={orderDetails.customerInfo}
+						orderInfo={props.orderInfo}
+						orderOutletUpdater={props.orderOutletUpdater}
+						setOrderOutletUpdater={props.setOrderOutletUpdater}
+						setOrderDetails={setOrderDetails}
+						allOrderIndex={props.allOrderIndex}
+					/>
 					<div className="order-profit-breakdown order-section">
 						<h4>Profit Breakdown</h4>
-						<Totals orderInfo={props.orderInfo} />
-						<div
-							className={`detailed-profit-breakdown`}
-							style={{
-								maxHeight: `${
-									detailedProfitBreakdownOpened
-										? calculatedMaxHeight
-										: fixedMaxHeight
-								}px`,
-							}}
-						>
-							{orderDetails.itemsInfo.map((item, index) => {
-								return (
-									<Item
-										item={item}
-										number={index + 1}
-										key={`item${index}`}
-									/>
-								);
-							})}
-						</div>
+						<Totals
+							orderInfo={props.orderInfo}
+							editMode={editMode}
+							setEditMode={setEditMode}
+						/>
+						<Items
+							detailedProfitBreakdownOpened={
+								detailedProfitBreakdownOpened
+							}
+							calculatedMaxHeight={calculatedMaxHeight}
+							itemsInfo={orderDetails.itemsInfo}
+						/>
 						<p
 							className="show-details"
 							onClick={toggleDetailedProfitBreakdown}
@@ -93,6 +98,21 @@ function AllOrder(props) {
 							{detailedProfitBreakdownOpened ? "Hide" : "Show"}{" "}
 							items
 						</p>
+						{editMode ? (
+							<p
+								className="toggle-edit-text done-edit-text"
+								onClick={() => setEditMode(false)}
+							>
+								done
+							</p>
+						) : (
+							<p
+								className="toggle-edit-text"
+								onClick={() => setEditMode(true)}
+							>
+								edit
+							</p>
+						)}
 					</div>
 					<i
 						className="far fa-times-circle order-details-cross-icon"
