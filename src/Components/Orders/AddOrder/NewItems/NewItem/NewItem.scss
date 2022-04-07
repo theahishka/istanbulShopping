@@ -2,11 +2,12 @@
 	border: 1px solid hsl(168, 35%, 20%);
 	border-radius: 15px;
 	padding: 0.5rem;
-    background-color: hsl(204, 95%, 85%);
-    margin-bottom: 0.5rem;
+    background-color: #E7BF72;
+    margin-bottom: 0.5rem; 
+    position: relative;
 
     h4 {
-        margin-bottom: 0.5rem;
+        margin-bottom: 1rem;
         text-align: center;
     }
 
@@ -32,6 +33,10 @@
 	}
 
     .delete-new-item {
+        display: block;
+        width: 92px;
+        margin-left: auto;
+        margin-right: auto;
         text-align: center;
         color: red;
         cursor: pointer;

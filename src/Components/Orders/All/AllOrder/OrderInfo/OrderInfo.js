@@ -6,9 +6,16 @@ import { DeliveredDate } from "./DeliveredDate/DeliveredDate";
 import { Payments } from "./Payments/Payments";
 import { updateBoxNumber } from "./updateBoxNumber";
 import { updateDeliveredDate as updateDeliveredDateFile } from "./updateDeliveredDate";
+import { updatePayments as updatePaymentsFile } from "./updatePayments";
+import { helperFunctions } from "./helperFunctions";
 
 function OrderInfo(props) {
+	// Edit mode state
 	const [editMode, setEditMode] = useState(false);
+
+	// Delete order confirmation state
+	const [deleteOrderConfirmation, setDeleteOrderConfirmation] =
+		useState(false);
 
 	// Code for editing box Id, part 1
 	const [editBox, setEditBox] = useState(false);
@@ -142,156 +149,84 @@ function OrderInfo(props) {
 	}
 
 	// Code for editing payments part 2
+	function startPaymentEditing(e) {
+		updatePaymentsFile.startPaymentEditing(
+			e,
+			setEditPayments,
+			setUpdatedPayments,
+			props.paymentsInfo
+		);
+	}
+
 	function validateUpdatedPayments(e) {
-		let value = e.target.value;
-		let index = Number(e.target.attributes.index.value);
-		setUpdatedPayments((prev) => {
-			let stateObject = { ...prev };
-			stateObject[`payment${index + 1}`].amount = value;
-			return stateObject;
-		});
+		updatePaymentsFile.validateUpdatedPayments(e, setUpdatedPayments);
 	}
 
 	function updatePayments(e) {
-		let inputBox = e.target.previousElementSibling.previousElementSibling;
-		let index = Number(e.target.attributes.index.value);
+		updatePaymentsFile.updatePayments(
+			e,
+			updatedPayments,
+			props.paymentsInfo,
+			endAllEditing,
+			istanbul,
+			props.orderInfo,
+			props.orderOutletUpdater,
+			props.setOrderOutletUpdater,
+			props.setOrderDetails
+		);
+	}
 
-		if (Number(updatedPayments[`payment${index + 1}`].amount) < 0) {
-			return (inputBox.style.outline = "2px solid red");
-		}
-
-		if (
-			Number(updatedPayments[`payment${index + 1}`].amount) ===
-			props.paymentsInfo[index].amount
-		) {
-			return endAllEditing();
-		}
-
-		if (updatedPayments[`payment${index + 1}`].amount === "") {
-			return (inputBox.style.outline = "2px solid red");
-		}
-
-		if (Number(updatedPayments[`payment${index + 1}`].amount) === 0) {
-			return istanbul
-				.deletePaymentInOrder(
-					props.orderInfo.order_id,
-					updatedPayments[`payment${index + 1}`].paymentId
-				)
-				.then(() => {
-					istanbul
-						.getSingleOrder(props.orderInfo.order_id)
-						.then((response) => {
-							if (props.orderOutletUpdater) {
-								props.setOrderOutletUpdater(false);
-							} else {
-								props.setOrderOutletUpdater(true);
-							}
-							props.setOrderDetails(response);
-							endAllEditing();
-						});
-				});
-		}
-
-		inputBox.style.outline = "";
-
-		istanbul
-			.putPaymentsInOrder(
-				props.orderInfo.order_id,
-				updatedPayments[`payment${index + 1}`].amount,
-				updatedPayments[`payment${index + 1}`].paymentId
-			)
-			.then(() => {
-				istanbul
-					.getSingleOrder(props.orderInfo.order_id)
-					.then((response) => {
-						if (props.orderOutletUpdater) {
-							props.setOrderOutletUpdater(false);
-						} else {
-							props.setOrderOutletUpdater(true);
-						}
-						props.setOrderDetails(response);
-						endAllEditing();
-					});
-			});
+	function startNewPaymentEditing(e) {
+		updatePaymentsFile.startNewPaymentEditing(
+			e,
+			setEditNewPayment,
+			props.allOrderIndex,
+			setUpdatedNewPayment
+		);
 	}
 
 	function validateUpdatedNewPayment(e) {
-		let value = e.target.value;
-		setUpdatedNewPayment(value);
+		updatePaymentsFile.validateUpdatedNewPayment(e, setUpdatedNewPayment);
 	}
 
 	function createNewPayment(e) {
-		const newPaymentInput = e.target.previousElementSibling;
-
-		if (updatedNewPayment === "") {
-			return (newPaymentInput.style.outline = "2px solid red");
-		}
-
-		if (Number(updatedNewPayment) < 0) {
-			return (newPaymentInput.style.outline = "2px solid red");
-		}
-
-		if (Number(updatedNewPayment) === 0) {
-			return (newPaymentInput.style.outline = "2px solid red");
-		}
-
-		newPaymentInput.style.outline = "";
-
-		istanbul
-			.postNewPayment(props.orderInfo.order_id, updatedNewPayment)
-			.then(() => {
-				istanbul
-					.getSingleOrder(props.orderInfo.order_id)
-					.then((response) => {
-						if (props.orderOutletUpdater) {
-							props.setOrderOutletUpdater(false);
-						} else {
-							props.setOrderOutletUpdater(true);
-						}
-						props.setOrderDetails(response);
-
-						if (orderInfoUpdater) {
-							setOrderInfoUpdater(false);
-						} else {
-							setOrderInfoUpdater(true);
-						}
-
-						endAllEditing();
-					});
-			});
+		updatePaymentsFile.createNewPayment(
+			e,
+			updatedNewPayment,
+			istanbul,
+			props.orderOutletUpdater,
+			props.setOrderOutletUpdater,
+			props.setOrderDetails,
+			orderInfoUpdater,
+			setOrderInfoUpdater,
+			endAllEditing,
+			props.orderInfo
+		);
 	}
 
-	// Code for all
+	// Helper functions for all
+	function deleteOrder(e) {
+		helperFunctions.deleteOrder(
+			e,
+			deleteOrderConfirmation,
+			setDeleteOrderConfirmation,
+			istanbul,
+			props.orderInfo,
+			props.orderOutletUpdater,
+			props.setOrderOutletUpdater
+		);
+	}
+
 	function endAllEditing() {
-		const saveUpdatedBoxId = document.querySelector(
-			`.save-updated-box-id-${props.allOrderIndex}`
+		helperFunctions.endAllEditing(
+			props.allOrderIndex,
+			setEditMode,
+			setEditBox,
+			setEditDeliveredDate,
+			setEditPayments,
+			props.paymentsInfo,
+			setEditNewPayment
 		);
-		saveUpdatedBoxId.style.display = "none";
-		const saveUpdatedDeliveredDate = document.querySelector(
-			`.save-updated-delivered-date-${props.allOrderIndex}`
-		);
-		saveUpdatedDeliveredDate.style.display = "none";
-		const saveUpdatedPayments = document.querySelectorAll(
-			`.save-updated-payment-${props.allOrderIndex}`
-		);
-		saveUpdatedPayments.forEach((element) => {
-			element.style.display = "none";
-		});
-		const saveNewPayment = document.querySelector(
-			`.save-new-payment-${props.allOrderIndex}`
-		);
-		saveNewPayment.style.display = "none";
-		setEditMode(false);
-		setEditBox(false);
-		setEditDeliveredDate(false);
-		setEditPayments((prev) => {
-			let newState = { ...prev };
-			for (let i = 0; i < props.paymentsInfo.length; i++) {
-				newState[`payment${i + 1}`] = false;
-			}
-			return newState;
-		});
-		setEditNewPayment(false);
 	}
 
 	function formatDate(date) {
@@ -348,10 +283,13 @@ function OrderInfo(props) {
 				allOrderIndex={props.allOrderIndex}
 			/>
 			<h5>
-				Total Amount: <span>{props.orderInfo.total_amount}$</span>
+				Total Amount:{" "}
+				<span>{props.orderInfo.total_amount.toFixed(2)}$</span>
 			</h5>
 			<Payments
 				paymentsInfo={props.paymentsInfo}
+				startPaymentEditing={startPaymentEditing}
+				startNewPaymentEditing={startNewPaymentEditing}
 				formatDate={formatDate}
 				editMode={editMode}
 				updatePayments={updatePayments}
@@ -371,9 +309,23 @@ function OrderInfo(props) {
 			<h5>
 				Outstanding:{" "}
 				<span className="outstanding">
-					{props.orderInfo.outstanding}$
+					{props.orderInfo.outstanding.toFixed(2)}$
 				</span>
 			</h5>
+			{editMode ? (
+				<div
+					className="delete-order-button-wrapper"
+					orderid={props.orderInfo.order_id}
+					onClick={deleteOrder}
+				>
+					<div className="delete-order-button">
+						Delete Order
+						<div className="delete-order-confirmation">
+							<div className="delete-order-confirmation-inner-circle"></div>
+						</div>
+					</div>
+				</div>
+			) : null}
 			{editMode ? (
 				<p
 					className="toggle-edit-text done-edit-text"

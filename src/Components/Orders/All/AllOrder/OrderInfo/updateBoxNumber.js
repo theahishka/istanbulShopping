@@ -1,5 +1,6 @@
 const updateBoxNumber = {};
 
+// Start box Id editing
 updateBoxNumber.startBoxIdEditing = (
 	e,
 	setEditBox,
@@ -17,6 +18,7 @@ updateBoxNumber.startBoxIdEditing = (
 	setUpdatedBoxId(currentBoxId);
 };
 
+// Validate updated box Id input
 updateBoxNumber.validateUpdatedBoxId = (
 	e,
 	setUpdatedBoxId,
@@ -36,6 +38,7 @@ updateBoxNumber.validateUpdatedBoxId = (
 	}
 };
 
+// Update box Id in the data base
 updateBoxNumber.updateBoxId = (
 	updatedBoxId,
 	currentBoxId,
@@ -59,15 +62,16 @@ updateBoxNumber.updateBoxId = (
 			istanbul
 				.putBoxInOrder(orderId, updatedBoxId, currentBoxId, customerId)
 				.then(() => {
-					istanbul.getSingleOrder(orderId).then((response) => {
-						if (orderOutletUpdater) {
-							setOrderOutletUpdater(false);
-						} else {
-							setOrderOutletUpdater(true);
-						}
-						setOrderDetails(response);
-						endAllEditing();
-					});
+					return istanbul.getSingleOrder(orderId);
+				})
+				.then((response) => {
+					if (orderOutletUpdater) {
+						setOrderOutletUpdater(false);
+					} else {
+						setOrderOutletUpdater(true);
+					}
+					setOrderDetails(response);
+					endAllEditing();
 				});
 			break;
 		} else {

@@ -27,7 +27,7 @@ function OrderOverview(props) {
 				Customer: <span>{props.orderInfo.customer_full_name}</span>
 			</h5>
 			<h5>
-				Amount: <span>{props.orderInfo.total_amount}</span>
+				Amount: <span>{props.orderInfo.total_amount.toFixed(2)}</span>
 			</h5>
 			<p className="date">{formatDate(props.orderInfo.date_created)}</p>
 			<div

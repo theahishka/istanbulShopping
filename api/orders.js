@@ -1,4 +1,5 @@
 const express = require("express");
+const { compileString } = require("sass");
 const ordersRouter = express.Router();
 const Pool = require("pg").Pool;
 const connection = {
@@ -309,6 +310,35 @@ ordersRouter.post("/", async (req, res, next) => {
 	}
 });
 
+// Delete order
+ordersRouter.delete("/:orderId", async (req, res, next) => {
+	try {
+		const orderId = req.params.orderId;
+		const customerId = req.order[0].customer_id;
+		const boxId = req.order[0].box_id;
+
+		const pool = new Pool(connection);
+		await pool.connect();
+
+		await pool.query("DELETE FROM orders WHERE order_id = $1", [orderId]);
+		await pool.query(
+			"DELETE FROM customer_" + customerId + " WHERE order_id = $1",
+			[orderId]
+		);
+		await pool.query("DELETE FROM box_" + boxId + " WHERE order_id = $1", [
+			orderId,
+		]);
+
+		await pool.query("DROP TABLE IF EXISTS order_items_" + orderId);
+		await pool.query("DROP TABLE IF EXISTS order_payments_" + orderId);
+
+		res.status(204).send();
+		await pool.end();
+	} catch (err) {
+		console.log(err);
+	}
+});
+
 // Put customer in order
 ordersRouter.put("/:orderId/customer", async (req, res, next) => {
 	try {
@@ -542,22 +572,22 @@ ordersRouter.post("/:orderId/payment", async (req, res, next) => {
 		}
 
 		await pool.query(
-			"UPDATE orders SET outstanding = $1, pending = $2 WHERE order_id = $3",
-			[outstanding, pending, orderId]
+			"UPDATE orders SET outstanding = $1, pending = $2, number_of_payments = $3 WHERE order_id = $4",
+			[outstanding, pending, payments.rows.length, orderId]
 		);
 
 		await pool.query(
 			"UPDATE customer_" +
 				customerId +
-				" SET outstanding = $1, pending = $2 WHERE order_id = $3",
-			[outstanding, pending, orderId]
+				" SET outstanding = $1, pending = $2, number_of_payments = $3 WHERE order_id = $4",
+			[outstanding, pending, payments.rows.length, orderId]
 		);
 
 		await pool.query(
 			"UPDATE box_" +
 				boxId +
-				" SET outstanding = $1, pending = $2 WHERE order_id = $3",
-			[outstanding, pending, orderId]
+				" SET outstanding = $1, pending = $2, number_of_payments = $3 WHERE order_id = $4",
+			[outstanding, pending, payments.rows.length, orderId]
 		);
 
 		res.status(201).send();
@@ -645,7 +675,6 @@ ordersRouter.delete("/:orderId/payment", async (req, res, next) => {
 		const dateDelivered = req.order[0].date_delivered;
 		const paymentId = Number(req.body.paymentId);
 		const revenue = req.order[0].total_amount;
-		const oldOutstanding = req.order[0].outstanding;
 		let date = new Date(Date.now());
 
 		const pool = new Pool(connection);
@@ -658,7 +687,24 @@ ordersRouter.delete("/:orderId/payment", async (req, res, next) => {
 			[paymentId]
 		);
 
-		const outstanding = oldOutstanding + deletingAmount.rows[0].amount;
+		await pool.query(
+			"DELETE FROM order_payments_" + orderId + " WHERE payment_id = $1",
+			[paymentId]
+		);
+
+		const payments = await pool.query(
+			"SELECT * FROM order_payments_" + orderId
+		);
+
+		const totalPayments = payments.rows
+			.map((payment) => {
+				return Number(payment.amount);
+			})
+			.reduce((prev, cur) => {
+				return prev + cur;
+			}, 0);
+
+		const outstanding = revenue - totalPayments;
 
 		let pending = true;
 		if (outstanding === 0 && dateDelivered) {
@@ -666,27 +712,22 @@ ordersRouter.delete("/:orderId/payment", async (req, res, next) => {
 		}
 
 		await pool.query(
-			"DELETE FROM order_payments_" + orderId + " WHERE payment_id = $1",
-			[paymentId]
-		);
-
-		await pool.query(
-			"UPDATE orders SET outstanding = $1, pending = $2 WHERE order_id = $3",
-			[outstanding, pending, orderId]
+			"UPDATE orders SET outstanding = $1, pending = $2, number_of_payments = $3 WHERE order_id = $4",
+			[outstanding, pending, payments.rows.length, orderId]
 		);
 
 		await pool.query(
 			"UPDATE customer_" +
 				customerId +
-				" SET outstanding = $1, pending = $2 WHERE order_id = $3",
-			[outstanding, pending, orderId]
+				" SET outstanding = $1, pending = $2, number_of_payments = $3 WHERE order_id = $4",
+			[outstanding, pending, payments.rows.length, orderId]
 		);
 
 		await pool.query(
 			"UPDATE box_" +
 				boxId +
-				" SET outstanding = $1, pending = $2 WHERE order_id = $3",
-			[outstanding, pending, orderId]
+				" SET outstanding = $1, pending = $2, number_of_payments = $3 WHERE order_id = $4",
+			[outstanding, pending, payments.rows.length, orderId]
 		);
 
 		res.status(204).send();
@@ -697,6 +738,424 @@ ordersRouter.delete("/:orderId/payment", async (req, res, next) => {
 });
 
 // Put total delivery cost in order
-ordersRouter.put("/:orderId/total-delivery-cost", (req, res, next) => {});
+ordersRouter.put("/:orderId/total-delivery-cost", async (req, res, next) => {
+	try {
+		const orderId = req.params.orderId;
+		const customerId = req.order[0].customer_id;
+		const boxId = req.order[0].box_id;
+		const oldTotalProfit = req.order[0].total_profit;
+		const newTotalDeliveryCost = Number(req.body.totalDeliveryCost);
+		const oldTotalDeliveryCost = Number(req.body.oldTotalDeliveryCost);
+		const oldTotalCosts = req.order[0].total_costs;
+		const numberOfItems = req.order[0].number_of_items;
+
+		const newTotalCosts =
+			oldTotalCosts - oldTotalDeliveryCost + newTotalDeliveryCost;
+
+		const newTotalProfit =
+			oldTotalProfit + oldTotalDeliveryCost - newTotalDeliveryCost;
+
+		const pool = new Pool(connection);
+		await pool.connect();
+
+		await pool.query(
+			"UPDATE orders SET total_delivery_cost = $1, total_costs = $2, total_profit = $3 WHERE order_id = $4",
+			[newTotalDeliveryCost, newTotalCosts, newTotalProfit, orderId]
+		);
+
+		await pool.query(
+			"UPDATE customer_" +
+				customerId +
+				" SET total_delivery_cost = $1, total_costs = $2, total_profit = $3 WHERE order_id = $4",
+			[newTotalDeliveryCost, newTotalCosts, newTotalProfit, orderId]
+		);
+
+		await pool.query(
+			"UPDATE box_" +
+				boxId +
+				" SET total_delivery_cost = $1, total_costs = $2, total_profit = $3 WHERE order_id = $4",
+			[newTotalDeliveryCost, newTotalCosts, newTotalProfit, orderId]
+		);
+
+		const { rows } = await pool.query(
+			"SELECT * FROM order_items_" + orderId + " ORDER BY item_id ASC"
+		);
+
+		for (let i = 0; i < rows.length; i++) {
+			let oldItemDeliveryCost = oldTotalDeliveryCost / numberOfItems;
+			let newItemDeliveryCost = newTotalDeliveryCost / numberOfItems;
+			let oldItemCosts = rows[i].item_costs;
+			let newItemCosts =
+				oldItemCosts - oldItemDeliveryCost + newItemDeliveryCost;
+			let oldItemProfit = rows[i].profit;
+			let newItemProfit =
+				oldItemProfit + oldItemDeliveryCost - newItemDeliveryCost;
+			await pool.query(
+				"UPDATE order_items_" +
+					orderId +
+					" SET item_delivery_cost = $1, item_costs = $2, profit = $3 WHERE item_id = $4",
+				[
+					newItemDeliveryCost,
+					newItemCosts,
+					newItemProfit,
+					rows[i].item_id,
+				]
+			);
+		}
+
+		res.status(200).send();
+
+		await pool.end();
+	} catch (err) {
+		console.log(err);
+	}
+});
+
+ordersRouter.put("/:orderId/items", async (req, res, next) => {
+	try {
+		const orderId = req.params.orderId;
+		const itemId = req.body.itemId;
+		const column = req.body.column;
+		const newInfo = req.body.newInfo;
+		const customerId = req.order[0].customer_id;
+		const boxId = req.order[0].box_id;
+		const dateDelivered = req.order[0].date_delivered;
+		const oldRevenue = req.body.oldRevenue;
+		const oldItemCost = req.body.oldItemCost;
+		const oldItemDeliveryCost = req.body.oldItemDeliveryCost;
+		const oldItemAirwayCost = req.body.oldItemAirwayCost;
+
+		const pool = new Pool(connection);
+		await pool.connect();
+
+		if (column === "revenue") {
+			let newItemCosts =
+				oldItemCost + oldItemDeliveryCost + oldItemAirwayCost;
+			let newItemProfit = Number(newInfo) - newItemCosts;
+			await pool.query(
+				"UPDATE order_items_" +
+					orderId +
+					" SET revenue = $1, profit = $2 WHERE item_id = $3",
+				[Number(newInfo), newItemProfit, itemId]
+			);
+
+			const items = await pool.query(
+				"SELECT * FROM order_items_" + orderId + " ORDER BY item_id ASC"
+			);
+
+			const newTotalRevenue = items.rows
+				.map((item) => {
+					return item.revenue;
+				})
+				.reduce((prev, cur) => {
+					return prev + cur;
+				}, 0);
+
+			const payments = await pool.query(
+				"SELECT * FROM order_payments_" +
+					orderId +
+					" ORDER BY payment_id ASC"
+			);
+
+			const totalPaid = payments.rows
+				.map((payment) => {
+					return payment.amount;
+				})
+				.reduce((prev, cur) => {
+					return prev + cur;
+				}, 0);
+
+			const oldTotalCosts = req.order[0].total_costs;
+
+			const newTotalProfit = newTotalRevenue - oldTotalCosts;
+			const newOutstanding = newTotalRevenue - totalPaid;
+
+			let pending = true;
+			if (newOutstanding === 0 && dateDelivered) {
+				pending = false;
+			}
+
+			await pool.query(
+				"UPDATE orders SET total_amount = $1, outstanding = $2, pending = $3, total_revenue = $4, total_profit = $5 WHERE order_id = $6",
+				[
+					newTotalRevenue,
+					newOutstanding,
+					pending,
+					newTotalRevenue,
+					newTotalProfit,
+					orderId,
+				]
+			);
+
+			await pool.query(
+				"UPDATE customer_" +
+					customerId +
+					" SET total_amount = $1, outstanding = $2, pending = $3, total_revenue = $4, total_profit = $5 WHERE order_id = $6",
+				[
+					newTotalRevenue,
+					newOutstanding,
+					pending,
+					newTotalRevenue,
+					newTotalProfit,
+					orderId,
+				]
+			);
+
+			await pool.query(
+				"UPDATE box_" +
+					boxId +
+					" SET total_amount = $1, outstanding = $2, pending = $3, total_revenue = $4, total_profit = $5 WHERE order_id = $6",
+				[
+					newTotalRevenue,
+					newOutstanding,
+					pending,
+					newTotalRevenue,
+					newTotalProfit,
+					orderId,
+				]
+			);
+
+			res.status(200).send();
+			return await pool.end();
+		}
+
+		if (column === "item_cost") {
+			const newItemCosts =
+				Number(newInfo) + oldItemDeliveryCost + oldItemAirwayCost;
+			const newItemProfit = oldRevenue - newItemCosts;
+
+			await pool.query(
+				"UPDATE order_items_" +
+					orderId +
+					" SET item_costs = $1, item_cost = $2, profit = $3 WHERE item_id = $4",
+				[newItemCosts, Number(newInfo), newItemProfit, itemId]
+			);
+
+			const items = await pool.query(
+				"SELECT * FROM order_items_" + orderId + " ORDER BY item_id ASC"
+			);
+
+			const newTotalItemCost = items.rows
+				.map((item) => {
+					return item.item_cost;
+				})
+				.reduce((prev, cur) => {
+					return prev + cur;
+				}, 0);
+
+			const newTotalCosts = items.rows
+				.map((item) => {
+					return item.item_costs;
+				})
+				.reduce((prev, cur) => {
+					return prev + cur;
+				}, 0);
+
+			const newTotalProfit = items.rows
+				.map((item) => {
+					return item.profit;
+				})
+				.reduce((prev, cur) => {
+					return prev + cur;
+				}, 0);
+
+			await pool.query(
+				"UPDATE orders SET total_costs = $1, total_item_cost = $2, total_profit = $3 WHERE order_id = $4",
+				[newTotalCosts, newTotalItemCost, newTotalProfit, orderId]
+			);
+
+			await pool.query(
+				"UPDATE customer_" +
+					customerId +
+					" SET total_costs = $1, total_item_cost = $2, total_profit = $3 WHERE order_id = $4",
+				[newTotalCosts, newTotalItemCost, newTotalProfit, orderId]
+			);
+
+			await pool.query(
+				"UPDATE box_" +
+					boxId +
+					" SET total_costs = $1, total_item_cost = $2, total_profit = $3 WHERE order_id = $4",
+				[newTotalCosts, newTotalItemCost, newTotalProfit, orderId]
+			);
+
+			res.status(200).send();
+			return await pool.end();
+		}
+
+		await pool.query(
+			"UPDATE order_items_" +
+				orderId +
+				" SET " +
+				column +
+				" = $1 WHERE item_id = $2",
+			[newInfo, itemId]
+		);
+
+		res.status(200).send();
+		return await pool.end();
+	} catch (err) {
+		console.log(err);
+	}
+});
+
+ordersRouter.delete("/:orderId/items", async (req, res, next) => {
+	try {
+		const orderId = req.params.orderId;
+		const itemId = req.body.itemId;
+		const dateDelivered = req.order[0].date_delivered;
+		const customerId = req.order[0].customer_id;
+		const boxId = req.order[0].box_id;
+		const oldTotalDeliveryCost = req.order[0].total_delivery_cost;
+		const oldTotalAirwayCost = req.order[0].total_airway_cost;
+
+		const pool = new Pool(connection);
+		await pool.connect();
+
+		await pool.query(
+			"DELETE FROM order_items_" + orderId + " WHERE item_id = $1",
+			[itemId]
+		);
+
+		const items = await pool.query(
+			"SELECT * FROM order_items_" + orderId + " ORDER BY item_id ASC"
+		);
+
+		const numberOfItems = items.rows.length;
+		const newSingleItemDeliveryCost = oldTotalDeliveryCost / numberOfItems;
+		const newSingleItemAirwayCost = oldTotalAirwayCost / numberOfItems;
+
+		for (let i = 0; i < numberOfItems; i++) {
+			const newSingleItemCosts =
+				items.rows[i].item_cost +
+				newSingleItemDeliveryCost +
+				newSingleItemAirwayCost;
+			const newSingleItemProfit =
+				items.rows[i].revenue - newSingleItemCosts;
+			await pool.query(
+				"UPDATE order_items_" +
+					orderId +
+					" SET item_costs = $1, item_delivery_cost = $2, item_airway_cost = $3, profit = $4 WHERE item_id = $5",
+				[
+					newSingleItemCosts,
+					newSingleItemDeliveryCost,
+					newSingleItemAirwayCost,
+					newSingleItemProfit,
+					items.rows[i].item_id,
+				]
+			);
+		}
+
+		const updatedItems = await pool.query(
+			"SELECT * FROM order_items_" + orderId + " ORDER BY item_id ASC"
+		);
+
+		const newTotalRevenue = updatedItems.rows
+			.map((item) => {
+				return item.revenue;
+			})
+			.reduce((prev, cur) => {
+				return prev + cur;
+			}, 0);
+
+		const newTotalCosts = updatedItems.rows
+			.map((item) => {
+				return item.item_costs;
+			})
+			.reduce((prev, cur) => {
+				return prev + cur;
+			}, 0);
+
+		const newTotalItemCost = updatedItems.rows
+			.map((item) => {
+				return item.item_cost;
+			})
+			.reduce((prev, cur) => {
+				return prev + cur;
+			}, 0);
+
+		const newTotalProfit = updatedItems.rows
+			.map((item) => {
+				return item.profit;
+			})
+			.reduce((prev, cur) => {
+				return prev + cur;
+			});
+
+		const payments = await pool.query(
+			"SELECT * FROM order_payments_" +
+				orderId +
+				" ORDER BY payment_id ASC"
+		);
+
+		const totalPaid = payments.rows
+			.map((payment) => {
+				return payment.amount;
+			})
+			.reduce((prev, cur) => {
+				return prev + cur;
+			}, 0);
+
+		const newOutstanding = newTotalRevenue - totalPaid;
+
+		let pending = true;
+		if (newOutstanding === 0 && dateDelivered) {
+			pending = false;
+		}
+
+		await pool.query(
+			"UPDATE orders SET number_of_items = $1, total_amount = $2, outstanding = $3, pending = $4, total_revenue = $5, total_costs = $6, total_item_cost = $7, total_profit = $8 WHERE order_id = $9",
+			[
+				numberOfItems,
+				newTotalRevenue,
+				newOutstanding,
+				pending,
+				newTotalRevenue,
+				newTotalCosts,
+				newTotalItemCost,
+				newTotalProfit,
+				orderId,
+			]
+		);
+
+		await pool.query(
+			"UPDATE customer_" +
+				customerId +
+				" SET number_of_items = $1, total_amount = $2, outstanding = $3, pending = $4, total_revenue = $5, total_costs = $6, total_item_cost = $7, total_profit = $8 WHERE order_id = $9",
+			[
+				numberOfItems,
+				newTotalRevenue,
+				newOutstanding,
+				pending,
+				newTotalRevenue,
+				newTotalCosts,
+				newTotalItemCost,
+				newTotalProfit,
+				orderId,
+			]
+		);
+
+		await pool.query(
+			"UPDATE box_" +
+				boxId +
+				" SET number_of_items = $1, total_amount = $2, outstanding = $3, pending = $4, total_revenue = $5, total_costs = $6, total_item_cost = $7, total_profit = $8 WHERE order_id = $9",
+			[
+				numberOfItems,
+				newTotalRevenue,
+				newOutstanding,
+				pending,
+				newTotalRevenue,
+				newTotalCosts,
+				newTotalItemCost,
+				newTotalProfit,
+				orderId,
+			]
+		);
+
+		res.status(204).send();
+		await pool.end();
+	} catch (err) {
+		console.log(err);
+	}
+});
 
 module.exports = ordersRouter;

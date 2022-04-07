@@ -2,7 +2,7 @@
 	border: 1px solid hsl(168, 35%, 20%);
 	border-radius: 15px;
 	padding: 0.5rem;
-	background-color: hsl(189, 100%, 78%);
+	background-color: #E7BF72;
 	margin-bottom: 0.5rem;
     
 	h4 {
@@ -32,6 +32,9 @@
 	}
 
     .delete-new-payment {
+		display: block;
+		width: 127px;
+		margin: 0 auto;
         text-align: center;
         color: red;
         cursor: pointer;

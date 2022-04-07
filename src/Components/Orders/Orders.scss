@@ -1,4 +1,4 @@
-$orders-background-color: hsl(204, 95%, 85%);
+$orders-background-color: #F0F1F3;
 
 .orders-wrapper {
     padding: 0.5rem;
@@ -10,7 +10,6 @@ $orders-background-color: hsl(204, 95%, 85%);
         margin: 0rem auto;
         font-family: "Poppins", sans-serif;
         background-color: $orders-background-color;
-        box-shadow: 5px 5px 5px 1px hsla(0, 0%, 0%, 0.3);
         border-radius: 15px;
         position: relative;
         transition: opacity 0.5s ease;

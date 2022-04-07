@@ -1,5 +1,6 @@
 const updateDeliveredDate = {};
 
+// Start delivered date editing
 updateDeliveredDate.startDeliveredDateEditing = (
 	e,
 	setEditDeliveredDate,
@@ -25,6 +26,7 @@ updateDeliveredDate.startDeliveredDateEditing = (
 	}
 };
 
+// Validate updated delivered date input
 updateDeliveredDate.validateUpdatedDeliveredDate = (
 	e,
 	setUpdatedDeliveredDate
@@ -33,6 +35,7 @@ updateDeliveredDate.validateUpdatedDeliveredDate = (
 	setUpdatedDeliveredDate(value);
 };
 
+// Update delivered date in the data base
 updateDeliveredDate.updateDeliveredDate = (
 	dateDelivered,
 	updatedDeliveredDate,
@@ -59,15 +62,16 @@ updateDeliveredDate.updateDeliveredDate = (
 					outstanding
 				)
 				.then(() => {
-					istanbul.getSingleOrder(orderId).then((response) => {
-						if (orderOutletUpdater) {
-							setOrderOutletUpdater(false);
-						} else {
-							setOrderOutletUpdater(true);
-						}
-						setOrderDetails(response);
-						endAllEditing();
-					});
+					return istanbul.getSingleOrder(orderId);
+				})
+				.then((response) => {
+					if (orderOutletUpdater) {
+						setOrderOutletUpdater(false);
+					} else {
+						setOrderOutletUpdater(true);
+					}
+					setOrderDetails(response);
+					endAllEditing();
 				});
 		}
 	} else {
@@ -83,15 +87,16 @@ updateDeliveredDate.updateDeliveredDate = (
 					outstanding
 				)
 				.then(() => {
-					istanbul.getSingleOrder(orderId).then((response) => {
-						if (orderOutletUpdater) {
-							setOrderOutletUpdater(false);
-						} else {
-							setOrderOutletUpdater(true);
-						}
-						setOrderDetails(response);
-						endAllEditing();
-					});
+					return istanbul.getSingleOrder(orderId);
+				})
+				.then((response) => {
+					if (orderOutletUpdater) {
+						setOrderOutletUpdater(false);
+					} else {
+						setOrderOutletUpdater(true);
+					}
+					setOrderDetails(response);
+					endAllEditing();
 				});
 		}
 	}

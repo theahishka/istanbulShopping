@@ -2,7 +2,9 @@ import { userExperience } from "../utils/userExperience";
 import "./BoxChoice.scss";
 
 function BoxChoice(props) {
-	
+	function openQuickNewBox() {
+		userExperience.openQuickNewBox();
+	}
 
 	function validateBoxInput(e) {
 		userExperience.validateBoxInput(
@@ -30,7 +32,10 @@ function BoxChoice(props) {
 					value={props.boxChoice}
 					onChange={validateBoxInput}
 				/>
-				<i className="fa-solid fa-plus add-new-button" onClick={userExperience.openQuickNewBox}></i>
+				<i
+					className="fa-solid fa-plus add-new-button"
+					onClick={openQuickNewBox}
+				></i>
 			</div>
 			<datalist id="boxes-list">
 				{!props.boxes

@@ -1,38 +1,6 @@
 import "./Payments.scss";
 
 function Payments(props) {
-	function startPaymentEditing(e) {
-		let index = Number(e.target.attributes.index.value);
-		props.setEditPayments((prev) => {
-			let newState = { ...prev };
-			newState[`payment${index + 1}`] = true;
-			return newState;
-		});
-
-		props.setUpdatedPayments((prev) => {
-			let stateObject = { ...prev };
-			stateObject[`payment${index + 1}`].amount =
-				props.paymentsInfo[index].amount;
-			return stateObject;
-		});
-
-		e.target.style.display = "none";
-		const saveUpdatedPayment = e.target.nextElementSibling;
-		saveUpdatedPayment.style.display = "inline-block";
-	}
-
-	function startNewPaymentEditing(e) {
-		props.setEditNewPayment(true);
-		const saveNewPayment = document.querySelector(
-			`.save-new-payment-${props.allOrderIndex}`
-		);
-
-		e.target.style.display = "none";
-		props.setUpdatedNewPayment(0);
-
-		saveNewPayment.style.display = "inline-block";
-	}
-
 	return (
 		<div>
 			{props.paymentsInfo.length > 0 ? (
@@ -54,7 +22,7 @@ function Payments(props) {
 								></input>
 							) : (
 								<span className="individual-payment">
-									{payment.amount}$ (
+									{payment.amount.toFixed(2)}$ (
 									{props.formatDate(
 										new Date(payment.date).toLocaleString(
 											"fr-CA"
@@ -66,7 +34,7 @@ function Payments(props) {
 							{props.editMode ? (
 								<i
 									className="fa-solid fa-pen edit-pen-icon"
-									onClick={startPaymentEditing}
+									onClick={props.startPaymentEditing}
 									index={index}
 								></i>
 							) : null}
@@ -100,7 +68,7 @@ function Payments(props) {
 			{props.editMode ? (
 				<div
 					className="add-additional-payment-button"
-					onClick={startNewPaymentEditing}
+					onClick={props.startNewPaymentEditing}
 				>
 					New Payment
 				</div>

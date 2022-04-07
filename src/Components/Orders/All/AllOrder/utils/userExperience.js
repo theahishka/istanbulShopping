@@ -11,7 +11,7 @@ userExperience.toggleDetailedProfitBreakdown = (e, state, setState) => {
 			const updatedDetailedProfitBreakdownElement =
 				e.target.previousElementSibling;
 			let scrollingAmount =
-				-632 +
+				-657 +
 				updatedDetailedProfitBreakdownElement.getBoundingClientRect()
 					.top;
 			window.scrollBy({
@@ -59,12 +59,11 @@ userExperience.toggleDetailedProfitBreakdown = (e, state, setState) => {
 };
 
 // Close order details by clicking cross icon on the top right corner
-userExperience.closeOrderDetails = (e, setState, setOrderDetails, editMode) => {
-	if (editMode) {
-		const doneEditText = e.target.previousElementSibling.lastElementChild;
-		doneEditText.click();
-	}
-	
+userExperience.closeOrderDetails = (
+	e,
+	setState,
+	setOrderDetails,
+) => {
 	const detailedOrderElement = e.target.parentElement;
 	function removeBubblingEffect(event) {
 		event.stopPropagation();

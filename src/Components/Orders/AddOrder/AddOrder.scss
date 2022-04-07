@@ -5,6 +5,7 @@
 	font-family: "Poppins", sans-serif;
 
 	.add-order-button {
+		height: 56.6px;
 		width: 100%;
 		background-color: hsl(168, 35%, 20%);
 		color: white;
@@ -13,18 +14,29 @@
 		padding: 1rem;
 		font-weight: 600;
 		cursor: pointer;
-		box-shadow: 5px 5px 5px 1px hsla(0, 0%, 0%, 0.3);
-	}
+		overflow: hidden;
+		position: relative;
 
-	.add-order-button:hover {
-		background-color: white;
-		color: hsl(168, 35%, 20%);
+		.ripple {
+			background-color: white;
+			border-radius: 50%;
+			pointer-events: none;
+			position: absolute;
+			transform: scale(0);
+			opacity: 0.3;
+		}
+		.start {
+			transform: scale(0.2);
+		}
+		.active {
+			transform: scale(2);
+			transition: transform 1400ms, opacity 1400ms;
+			opacity: 0.4;
+		}
 	}
 
 	.add-order-form-wrapper {
-		box-shadow: 5px 5px 5px 1px hsla(0, 0%, 0%, 0.3);
 		border-radius: 15px;
-		// border: 1px solid hsl(168, 35%, 20%);
 		position: absolute;
 		background-color: white;
 		top: 0;
@@ -73,37 +85,8 @@
 			}
 		}
 
-		.add-new-items {
-			.add-additional-item-button {
-				margin-left: auto;
-				margin-right: auto;
-				width: 50%;
-				text-align: center;
-				background-color: hsl(204, 95%, 85%);
-				padding: 0.5rem;
-				border: 1px solid hsl(168, 35%, 20%);
-				border-radius: 15px;
-				cursor: pointer;
-				margin-bottom: 0.5rem;
-			}
-		}
-
-		.add-new-payments {
-			.add-additional-payment-button {
-				margin-left: auto;
-				margin-right: auto;
-				width: 50%;
-				text-align: center;
-				background-color: hsl(189, 100%, 78%);
-				padding: 0.5rem;
-				border: 1px solid hsl(168, 35%, 20%);
-				border-radius: 15px;
-				cursor: pointer;
-				margin-bottom: 0.5rem;
-			}
-		}
-
 		button {
+			height: 47px;
 			width: 100%;
 			padding: 0.5rem;
 			font-size: 1.5rem;
@@ -113,11 +96,25 @@
 			border-radius: 15px;
 			text-align: center;
 			cursor: pointer;
-		}
+			position: relative;
+			overflow: hidden;
 
-		button:hover {
-			background-color: white;
-			color: hsl(168, 35%, 20%);
+			.ripple {
+				background-color: white;
+				border-radius: 50%;
+				pointer-events: none;
+				position: absolute;
+				transform: scale(0);
+				opacity: 0.3;
+			}
+			.start {
+				transform: scale(0.2);
+			}
+			.active {
+				transform: scale(2);
+				transition: transform 1400ms, opacity 1400ms;
+				opacity: 0.4;
+			}
 		}
 
 		.fa-times-circle {

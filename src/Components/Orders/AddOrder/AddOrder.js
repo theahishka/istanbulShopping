@@ -2,8 +2,8 @@ import { useState, useEffect } from "react";
 import "./AddOrder.scss";
 import { BoxChoice } from "./BoxChoice/BoxChoice";
 import { CustomerChoice } from "./CustomerChoice/CustomerChoice";
-import { NewItem } from "./NewItem/NewItem";
-import { NewPayment } from "./NewPayment/NewPayment";
+import { NewPayments } from "./NewPayments/NewPayments";
+import { NewItems } from "./NewItems/NewItems";
 import { userExperience } from "./utils/userExperience";
 import { QuickNewCustomer } from "./QuickNewCustomer/QuickNewCustomer";
 import { QuickNewBox } from "./QuickNewBox/QuickNewBox";
@@ -41,6 +41,73 @@ function AddOrder(props) {
 		istanbul.getAllBoxes().then((response) => {
 			return setBoxes(response);
 		});
+
+		const letters = Array.from(
+			document.querySelectorAll(".element-with-ripple")
+		);
+
+		function handleMouseDown(e, letter, timerId) {
+			clearTimeout(timerId);
+			const ripple = e.target.querySelector(".ripple");
+			const size = letter.offsetWidth;
+			const pos = letter.getBoundingClientRect();
+			const x = e.x - pos.left - size;
+			const y = e.y - pos.top - size;
+			ripple.style =
+				"top:" +
+				y +
+				"px; left:" +
+				x +
+				"px; width: " +
+				size * 2 +
+				"px; height: " +
+				size * 2 +
+				"px;";
+			ripple.classList.remove("active");
+			ripple.classList.remove("start");
+			setTimeout(() => {
+				ripple.classList.add("start");
+				setTimeout(() => {
+					ripple.classList.add("active");
+				});
+			});
+		}
+
+		function handleMouseUp(e, timerId) {
+			const ripple = e.target.querySelector(".ripple");
+			clearTimeout(timerId);
+			timerId = setTimeout(() => {
+				ripple.classList.remove("active");
+				ripple.classList.remove("start");
+			}, 500);
+		}
+
+		letters.forEach((letter) => {
+			let timerId;
+
+			letter.addEventListener("mousedown", function mouseDown(e) {
+				handleMouseDown(e, letter, timerId);
+			});
+
+			letter.addEventListener("mouseup", function mouseUp(e) {
+				handleMouseUp(e, timerId);
+			});
+		});
+
+		return () => {
+			const letters = Array.from(
+				document.querySelectorAll(".element-with-ripple")
+			);
+			letters.forEach((letter) => {
+				let timerId;
+				letter.removeEventListener("mousedown", function mouseDown(e) {
+					handleMouseDown(e, letter, timerId);
+				});
+				letter.removeEventListener("mouseup", function mouseUp(e) {
+					handleMouseUp(e, timerId);
+				});
+			});
+		};
 	}, [updater]);
 
 	function addAdditionalItem() {
@@ -49,6 +116,10 @@ function AddOrder(props) {
 
 	function addAdditionalPayment() {
 		userExperience.addAdditionalPayment(setPayments);
+	}
+
+	function openNewOrderForm() {
+		userExperience.openNewOrderForm();
 	}
 
 	function createNewOrder(e) {
@@ -76,13 +147,18 @@ function AddOrder(props) {
 		);
 	}
 
+	function closeNewOrderForm() {
+		userExperience.closeNewOrderForm();
+	}
+
 	return (
 		<div className="add-order-wrapper">
 			<div
-				className="add-order-button"
-				onClick={userExperience.openNewOrderForm}
+				className="add-order-button element-with-ripple"
+				onClick={openNewOrderForm}
 			>
 				ADD ORDER
+				<div className="ripple"></div>
 			</div>
 			<section className="add-order-form-wrapper">
 				<h3>New Order</h3>
@@ -102,53 +178,24 @@ function AddOrder(props) {
 						boxChoice={boxChoice}
 						setBoxChoice={setBoxChoice}
 					/>
-					<div className="add-new-payments">
-						<h3>Payments</h3>
-						{payments.map((payment, index) => {
-							return (
-								<NewPayment
-									payment={payment}
-									index={index}
-									setPayments={setPayments}
-									payments={payments}
-									key={`new-payment-${index + 1}`}
-								/>
-							);
-						})}
-						<div
-							className="add-additional-payment-button"
-							onClick={addAdditionalPayment}
-						>
-							Add Payment
-						</div>
-					</div>
-					<div className="add-new-items">
-						<h3>Items</h3>
-						{items.map((item, index) => {
-							return (
-								<NewItem
-									items={items}
-									item={item}
-									index={index}
-									setItems={setItems}
-									key={`new-item-${index + 1}`}
-								/>
-							);
-						})}
-						<div
-							className="add-additional-item-button"
-							onClick={addAdditionalItem}
-						>
-							Add Item
-						</div>
-					</div>
-					<button type="submit" onClick={createNewOrder}>
+					<NewPayments
+						payments={payments}
+						addAdditionalPayment={addAdditionalPayment}
+						setPayments={setPayments}
+					/>
+					<NewItems items={items} setItems={setItems} addAdditionalItem={addAdditionalItem}/>
+					<button
+						className="element-with-ripple create-order-button"
+						type="submit"
+						onClick={createNewOrder}
+					>
 						Create Order
+						<div className="ripple"></div>
 					</button>
 				</form>
 				<i
 					className="far fa-times-circle"
-					onClick={userExperience.closeNewOrderForm}
+					onClick={closeNewOrderForm}
 				></i>
 			</section>
 			<QuickNewCustomer
@@ -163,6 +210,8 @@ function AddOrder(props) {
 				setUpdater={setUpdater}
 				setBoxChoice={setBoxChoice}
 				setBoxId={setBoxId}
+				orderOutletUpdater={props.orderOutletUpdater}
+				setOrderOutletUpdater={props.setOrderOutletUpdater}
 			/>
 			{!loading ? null : (
 				<div className="add-order-spinner-wrapper">

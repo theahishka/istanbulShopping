@@ -36,16 +36,16 @@ function All(props) {
 		<section className="all-wrapper">
 			<div className="all-info">
 				<h4 className="all-total">
-					Total:<span> {all.total}</span>
+					Total: <span>{all.total}</span>
 				</h4>
 				<h4 className="all-completed">
-					Completed:<span> {all.completed}</span>
+					Completed: <span>{all.completed}</span>
 				</h4>
 				<h4 className="all-pending">
-					Pending:<span> {all.pending}</span>
+					Pending: <span>{all.pending}</span>
 				</h4>
 				<h4 className="all-boxes">
-					Boxes:<span> {all.boxes}</span>
+					Boxes: <span>{all.boxes}</span>
 				</h4>
 			</div>
 			<div className="all-orders">

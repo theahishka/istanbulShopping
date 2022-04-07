@@ -3,7 +3,6 @@ import "./AllOrder.scss";
 import { CustomerInfo } from "./CustomerInfo/CustomerInfo";
 import { OrderInfo } from "./OrderInfo/OrderInfo";
 import { Totals } from "./Totals/Totals";
-
 import { OrderOverview } from "./OrderOverview/OrderOverview";
 import { userExperience } from "./utils/userExperience";
 import { istanbul } from "../../../../utils/istanbul";
@@ -12,7 +11,6 @@ import { Items } from "./Items/Items";
 
 function AllOrder(props) {
 	const [orderDetails, setOrderDetails] = useState(null);
-	const [editMode, setEditMode] = useState(false);
 
 	const [detailedProfitBreakdownOpened, setDetailedProfitBreakdownOpened] =
 		useState(false);
@@ -28,14 +26,13 @@ function AllOrder(props) {
 	// Dynamic calculation of max height for smoother closing and opening animation of a single order
 	let numberOfItems = props.orderInfo.number_of_items;
 	let numberOfPayments = props.orderInfo.number_of_payments;
-	let calculatedMaxHeight = 450 * numberOfItems + 24 * numberOfPayments;
+	let calculatedMaxHeight = 550 * numberOfItems + 24 * numberOfPayments + 350;
 
 	const closeOrderDetails = (e) => {
 		userExperience.closeOrderDetails(
 			e,
 			setDetailedProfitBreakdownOpened,
-			setOrderDetails,
-			editMode
+			setOrderDetails
 		);
 	};
 
@@ -81,8 +78,10 @@ function AllOrder(props) {
 						<h4>Profit Breakdown</h4>
 						<Totals
 							orderInfo={props.orderInfo}
-							editMode={editMode}
-							setEditMode={setEditMode}
+							allOrderIndex={props.allOrderIndex}
+							setOrderDetails={setOrderDetails}
+							orderOutletUpdater={props.orderOutletUpdater}
+							setOrderOutletUpdater={props.setOrderOutletUpdater}
 						/>
 						<Items
 							detailedProfitBreakdownOpened={
@@ -90,6 +89,11 @@ function AllOrder(props) {
 							}
 							calculatedMaxHeight={calculatedMaxHeight}
 							itemsInfo={orderDetails.itemsInfo}
+							allOrderIndex={props.allOrderIndex}
+							orderInfo={props.orderInfo}
+							setOrderDetails={setOrderDetails}
+							orderOutletUpdater={props.orderOutletUpdater}
+							setOrderOutletUpdater={props.setOrderOutletUpdater}
 						/>
 						<p
 							className="show-details"
@@ -98,21 +102,6 @@ function AllOrder(props) {
 							{detailedProfitBreakdownOpened ? "Hide" : "Show"}{" "}
 							items
 						</p>
-						{editMode ? (
-							<p
-								className="toggle-edit-text done-edit-text"
-								onClick={() => setEditMode(false)}
-							>
-								done
-							</p>
-						) : (
-							<p
-								className="toggle-edit-text"
-								onClick={() => setEditMode(true)}
-							>
-								edit
-							</p>
-						)}
 					</div>
 					<i
 						className="far fa-times-circle order-details-cross-icon"

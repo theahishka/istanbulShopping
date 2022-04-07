@@ -47,11 +47,25 @@
 		border-radius: 15px;
 		text-align: center;
 		cursor: pointer;
-	}
+		position: relative;
+		overflow: hidden;
 
-	.create-box-button:hover {
-		background-color: white;
-		color: hsl(168, 35%, 20%);
+		.ripple-new-box {
+			background-color: white;
+			border-radius: 50%;
+			pointer-events: none;
+			position: absolute;
+			transform: scale(0);
+			opacity: 0.3;
+		}
+		.start {
+			transform: scale(0.2);
+		}
+		.active {
+			transform: scale(2);
+			transition: transform 1400ms, opacity 1400ms;
+			opacity: 0.4;
+		}
 	}
 
 	.quick-new-box-spinner-wrapper {

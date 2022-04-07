@@ -1,5 +1,6 @@
 const userExperience = {};
 
+// Add additional item
 userExperience.addAdditionalItem = (setState) => {
 	let newItemObject = {
 		brand: "",
@@ -18,6 +19,7 @@ userExperience.addAdditionalItem = (setState) => {
 	});
 };
 
+// Add additional payments
 userExperience.addAdditionalPayment = (setState) => {
 	let newPaymentObject = {
 		amount: "",
@@ -31,73 +33,7 @@ userExperience.addAdditionalPayment = (setState) => {
 	});
 };
 
-// Close all order details
-userExperience.closeAllOrderDetails = () => {
-	const allCrossButtons = document.querySelectorAll(
-		".order-details-cross-icon"
-	);
-	allCrossButtons.forEach((element) => {
-		element.click();
-	});
-};
-
-userExperience.openNewOrderForm = () => {
-	const newOrderFormElement = document.querySelector(
-		".add-order-form-wrapper"
-	);
-	newOrderFormElement.style.display = "block";
-	setTimeout(() => {
-		newOrderFormElement.style.opacity = "1";
-	}, 200);
-
-	// Remove order elements for blocking scrolling
-	window.scrollTo({
-		top: 0,
-		left: 0,
-		behavior: "smooth",
-	});
-
-	const ordersElement = document.querySelector(".orders");
-	ordersElement.style.opacity = "0";
-	function removeOrdersElement() {
-		// ordersElement.style.display = "none";
-		ordersElement.style.maxHeight = "100px";
-		ordersElement.style.pointerEvents = "none";
-		ordersElement.style.overflow = "hidden";
-		ordersElement.removeEventListener("transitionend", removeOrdersElement);
-	}
-	ordersElement.addEventListener("transitionend", removeOrdersElement);
-};
-
-userExperience.closeNewOrderForm = () => {
-	const newOrderFormElement = document.querySelector(
-		".add-order-form-wrapper"
-	);
-	newOrderFormElement.style.opacity = "0";
-
-	function removeNewOrderFormElement() {
-		newOrderFormElement.style.display = "none";
-		newOrderFormElement.removeEventListener(
-			"transitionend",
-			removeNewOrderFormElement
-		);
-	}
-
-	newOrderFormElement.addEventListener(
-		"transitionend",
-		removeNewOrderFormElement
-	);
-
-	// Add back order elements
-	const ordersElement = document.querySelector(".orders");
-	ordersElement.style.maxHeight = "";
-	ordersElement.style.pointerEvents = "";
-	ordersElement.style.overflow = "";
-	setTimeout(() => {
-		ordersElement.style.opacity = "1";
-	}, 200);
-};
-
+// Validate Customer Input
 userExperience.validateCustomerInput = (
 	e,
 	customers,
@@ -142,6 +78,7 @@ userExperience.validateCustomerInput = (
 	}
 };
 
+// Validate box input
 userExperience.validateBoxInput = (e, boxes, setBoxChoice, setBoxId) => {
 	let value = e.target.value;
 	setBoxChoice(value);
@@ -159,271 +96,36 @@ userExperience.validateBoxInput = (e, boxes, setBoxChoice, setBoxId) => {
 	}
 };
 
-userExperience.openQuickNewCustomer = () => {
-	const quickNewCustomerWrapperElement = document.querySelector(
-		".quick-new-customer-wrapper"
+// Open new order form
+userExperience.openNewOrderForm = () => {
+	const newOrderFormElement = document.querySelector(
+		".add-order-form-wrapper"
 	);
-	quickNewCustomerWrapperElement.style.display = "block";
+	newOrderFormElement.style.display = "block";
+	setTimeout(() => {
+		newOrderFormElement.style.opacity = "1";
+	}, 100);
+
+	// Remove order elements for blocking scrolling
 	window.scrollTo({
 		top: 0,
 		left: 0,
 		behavior: "smooth",
 	});
-	setTimeout(() => {
-		quickNewCustomerWrapperElement.style.opacity = "1";
-	}, 200);
 
-	// Blur the add order form wrapper and scroll upwards
-	const addOrderFormWrapperElement = document.querySelector(
-		".add-order-form-wrapper"
-	);
-	addOrderFormWrapperElement.style.filter = "blur(10px)";
-	addOrderFormWrapperElement.style.pointerEvents = "none";
-
-	const body = document.body;
-	if (body.getBoundingClientRect().y === 0) {
-		body.style.overflow = "hidden";
-	} else {
-		function hideOverflow() {
-			if (window.scrollY === 0) {
-				body.style.overflow = "hidden";
-				document.removeEventListener("scroll", hideOverflow);
-			} else {
-				window.scrollTo({
-					top: 0,
-					left: 0,
-					behavior: "smooth",
-				});
-			}
-		}
-		document.addEventListener("scroll", hideOverflow);
+	const ordersElement = document.querySelector(".orders");
+	ordersElement.style.opacity = "0";
+	function removeOrdersElement() {
+		// ordersElement.style.display = "none";
+		ordersElement.style.maxHeight = "100px";
+		ordersElement.style.pointerEvents = "none";
+		ordersElement.style.overflow = "hidden";
+		ordersElement.removeEventListener("transitionend", removeOrdersElement);
 	}
+	ordersElement.addEventListener("transitionend", removeOrdersElement);
 };
 
-userExperience.closeQuickNewCustomer = () => {
-	const quickNewCustomerWrapperElement = document.querySelector(
-		".quick-new-customer-wrapper"
-	);
-	quickNewCustomerWrapperElement.style.opacity = "0";
-
-	function removeQuickNewCustomer() {
-		quickNewCustomerWrapperElement.style.display = "none";
-		quickNewCustomerWrapperElement.removeEventListener(
-			"transitionend",
-			removeQuickNewCustomer
-		);
-	}
-	quickNewCustomerWrapperElement.addEventListener(
-		"transitionend",
-		removeQuickNewCustomer
-	);
-
-	// Remove blur on add order form wrapper
-	const addOrderFormWrapperElement = document.querySelector(
-		".add-order-form-wrapper"
-	);
-	addOrderFormWrapperElement.style.filter = "";
-	addOrderFormWrapperElement.style.pointerEvents = "";
-
-	const body = document.body;
-	body.style.overflow = "";
-};
-
-userExperience.createNewCustomer = (
-	e,
-	newCustomer,
-	setNewCustomer,
-	setLoading,
-	updater,
-	setUpdater,
-	setCustomerChoice,
-	istanbul,
-	setCustomerId,
-	setCustomerFullName
-) => {
-	if (newCustomer.fullName && newCustomer.address && newCustomer.phone) {
-		e.preventDefault();
-		setLoading(true);
-		const quickNewCustomerForm = document.querySelector(
-			".quick-new-customer-form"
-		);
-		quickNewCustomerForm.style.filter = "blur(10px)";
-		quickNewCustomerForm.style.pointerEvents = "none";
-
-		setTimeout(() => {
-			istanbul.postNewCustomer(newCustomer).then((response) => {
-				quickNewCustomerForm.style.filter = "";
-				quickNewCustomerForm.style.pointerEvents = "";
-				setLoading(false);
-
-				if (updater) {
-					setUpdater(false);
-				} else {
-					setUpdater(true);
-				}
-
-				function closeQuickNewCustomerForm() {
-					userExperience.closeQuickNewCustomer();
-					quickNewCustomerForm.removeEventListener(
-						"transitionend",
-						closeQuickNewCustomerForm
-					);
-				}
-
-				quickNewCustomerForm.addEventListener(
-					"transitionend",
-					closeQuickNewCustomerForm
-				);
-
-				setCustomerChoice(
-					`${newCustomer.fullName} (${newCustomer.phone})`
-				);
-
-				setCustomerFullName(newCustomer.fullName);
-
-				setNewCustomer({
-					fullName: "",
-					address: "",
-					phone: "",
-					comments: "",
-				});
-
-				const customerChoiceId = document.querySelector(
-					".customer-choice-id"
-				);
-				const customerChoiceInput =
-					document.querySelector(".customer-choice");
-
-				customerChoiceId.value = response;
-				customerChoiceId.style.outline = "2px solid green";
-				customerChoiceInput.style.outline = "2px solid green";
-
-				setCustomerId(response);
-			});
-		}, 400);
-	}
-};
-
-userExperience.openQuickNewBox = () => {
-	const quickNewBoxWrapperElement = document.querySelector(
-		".quick-new-box-wrapper"
-	);
-	quickNewBoxWrapperElement.style.display = "block";
-	window.scrollTo({
-		top: 0,
-		left: 0,
-		behavior: "smooth",
-	});
-	setTimeout(() => {
-		quickNewBoxWrapperElement.style.opacity = "1";
-	}, 200);
-
-	// Blur the add order form wrapper and scroll upwards
-	const addOrderFormWrapperElement = document.querySelector(
-		".add-order-form-wrapper"
-	);
-	addOrderFormWrapperElement.style.filter = "blur(10px)";
-	addOrderFormWrapperElement.style.pointerEvents = "none";
-
-	const body = document.body;
-	if (body.getBoundingClientRect().y === 0) {
-		body.style.overflow = "hidden";
-	} else {
-		function hideOverflow() {
-			if (window.scrollY === 0) {
-				body.style.overflow = "hidden";
-				document.removeEventListener("scroll", hideOverflow);
-			} else {
-				window.scrollTo({
-					top: 0,
-					left: 0,
-					behavior: "smooth",
-				});
-			}
-		}
-		document.addEventListener("scroll", hideOverflow);
-	}
-};
-
-userExperience.closeQuickNewBox = () => {
-	const quickNewBoxWrapperElement = document.querySelector(
-		".quick-new-box-wrapper"
-	);
-	quickNewBoxWrapperElement.style.opacity = "0";
-
-	function removeQuickNewCustomer() {
-		quickNewBoxWrapperElement.style.display = "none";
-		quickNewBoxWrapperElement.removeEventListener(
-			"transitionend",
-			removeQuickNewCustomer
-		);
-	}
-	quickNewBoxWrapperElement.addEventListener(
-		"transitionend",
-		removeQuickNewCustomer
-	);
-
-	// Remove blur on add order form wrapper
-	const addOrderFormWrapperElement = document.querySelector(
-		".add-order-form-wrapper"
-	);
-	addOrderFormWrapperElement.style.filter = "";
-	addOrderFormWrapperElement.style.pointerEvents = "";
-
-	const body = document.body;
-	body.style.overflow = "";
-};
-
-userExperience.createNewBox = (
-	e,
-	setLoading,
-	istanbul,
-	setNotifyCreation,
-	setBoxChoice,
-	setBoxId,
-	updater,
-	setUpdater
-) => {
-	const quickNewBoxInfoWrapper = document.querySelector(
-		".quick-new-box-info-wrapper"
-	);
-	quickNewBoxInfoWrapper.style.filter = "blur(10px)";
-	quickNewBoxInfoWrapper.style.pointerEvents = "none";
-
-	setLoading(true);
-
-	setTimeout(() => {
-		istanbul.postNewBox().then((response) => {
-			setLoading(false);
-			setNotifyCreation(true);
-
-			const newlyCreatedBoxIdElement = document.querySelector(
-				".newly-created-box-id"
-			);
-			newlyCreatedBoxIdElement.innerText = response;
-
-			setTimeout(() => {
-				setNotifyCreation(false);
-				quickNewBoxInfoWrapper.style.filter = "blur(0)";
-				quickNewBoxInfoWrapper.style.pointerEvents = "";
-
-				setBoxChoice(response);
-				const boxChoiceInput = document.querySelector(".box-choice");
-				boxChoiceInput.style.outline = "2px solid green";
-				userExperience.closeQuickNewBox();
-
-				setBoxId(response);
-
-				if (updater) {
-					setUpdater(false);
-				} else {
-					setUpdater(true);
-				}
-			}, 2000);
-		});
-	}, 400);
-};
-
+// Create new order
 userExperience.createNewOrder = (
 	e,
 	items,
@@ -578,6 +280,325 @@ userExperience.createNewOrder = (
 			});
 		}, 400);
 	}
+};
+
+// Close new order form
+userExperience.closeNewOrderForm = () => {
+	const newOrderFormElement = document.querySelector(
+		".add-order-form-wrapper"
+	);
+	newOrderFormElement.style.opacity = "0";
+
+	function removeNewOrderFormElement() {
+		newOrderFormElement.style.display = "none";
+		newOrderFormElement.removeEventListener(
+			"transitionend",
+			removeNewOrderFormElement
+		);
+	}
+
+	newOrderFormElement.addEventListener(
+		"transitionend",
+		removeNewOrderFormElement
+	);
+
+	// Add back order elements
+	const ordersElement = document.querySelector(".orders");
+	ordersElement.style.maxHeight = "";
+	ordersElement.style.pointerEvents = "";
+	ordersElement.style.overflow = "";
+	setTimeout(() => {
+		ordersElement.style.opacity = "1";
+	}, 200);
+};
+
+// Open quick new customer
+userExperience.openQuickNewCustomer = () => {
+	const quickNewCustomerWrapperElement = document.querySelector(
+		".quick-new-customer-wrapper"
+	);
+	quickNewCustomerWrapperElement.style.display = "block";
+	window.scrollTo({
+		top: 0,
+		left: 0,
+		behavior: "smooth",
+	});
+	setTimeout(() => {
+		quickNewCustomerWrapperElement.style.opacity = "1";
+	}, 200);
+
+	// Blur the add order form wrapper and scroll upwards
+	const addOrderFormWrapperElement = document.querySelector(
+		".add-order-form-wrapper"
+	);
+	addOrderFormWrapperElement.style.filter = "blur(10px)";
+	addOrderFormWrapperElement.style.pointerEvents = "none";
+
+	const body = document.body;
+	if (body.getBoundingClientRect().y === 0) {
+		body.style.overflow = "hidden";
+	} else {
+		function hideOverflow() {
+			if (window.scrollY === 0) {
+				body.style.overflow = "hidden";
+				document.removeEventListener("scroll", hideOverflow);
+			} else {
+				window.scrollTo({
+					top: 0,
+					left: 0,
+					behavior: "smooth",
+				});
+			}
+		}
+		document.addEventListener("scroll", hideOverflow);
+	}
+};
+
+// Create new customer
+userExperience.createNewCustomer = (
+	e,
+	newCustomer,
+	setNewCustomer,
+	setLoading,
+	updater,
+	setUpdater,
+	setCustomerChoice,
+	istanbul,
+	setCustomerId,
+	setCustomerFullName
+) => {
+	if (newCustomer.fullName && newCustomer.address && newCustomer.phone) {
+		e.preventDefault();
+		setLoading(true);
+		const quickNewCustomerForm = document.querySelector(
+			".quick-new-customer-form"
+		);
+		quickNewCustomerForm.style.filter = "blur(10px)";
+		quickNewCustomerForm.style.pointerEvents = "none";
+
+		setTimeout(() => {
+			istanbul.postNewCustomer(newCustomer).then((response) => {
+				quickNewCustomerForm.style.filter = "";
+				quickNewCustomerForm.style.pointerEvents = "";
+				setLoading(false);
+
+				if (updater) {
+					setUpdater(false);
+				} else {
+					setUpdater(true);
+				}
+
+				function closeQuickNewCustomerForm() {
+					userExperience.closeQuickNewCustomer();
+					quickNewCustomerForm.removeEventListener(
+						"transitionend",
+						closeQuickNewCustomerForm
+					);
+				}
+
+				quickNewCustomerForm.addEventListener(
+					"transitionend",
+					closeQuickNewCustomerForm
+				);
+
+				setCustomerChoice(
+					`${newCustomer.fullName} (${newCustomer.phone})`
+				);
+
+				setCustomerFullName(newCustomer.fullName);
+
+				setNewCustomer({
+					fullName: "",
+					address: "",
+					phone: "",
+					comments: "",
+				});
+
+				const customerChoiceId = document.querySelector(
+					".customer-choice-id"
+				);
+				const customerChoiceInput =
+					document.querySelector(".customer-choice");
+
+				customerChoiceId.value = response;
+				customerChoiceId.style.outline = "2px solid green";
+				customerChoiceInput.style.outline = "2px solid green";
+
+				setCustomerId(response);
+			});
+		}, 400);
+	}
+};
+
+// Close quick new customer
+userExperience.closeQuickNewCustomer = () => {
+	const quickNewCustomerWrapperElement = document.querySelector(
+		".quick-new-customer-wrapper"
+	);
+	quickNewCustomerWrapperElement.style.opacity = "0";
+
+	function removeQuickNewCustomer() {
+		quickNewCustomerWrapperElement.style.display = "none";
+		quickNewCustomerWrapperElement.removeEventListener(
+			"transitionend",
+			removeQuickNewCustomer
+		);
+	}
+	quickNewCustomerWrapperElement.addEventListener(
+		"transitionend",
+		removeQuickNewCustomer
+	);
+
+	// Remove blur on add order form wrapper
+	const addOrderFormWrapperElement = document.querySelector(
+		".add-order-form-wrapper"
+	);
+	addOrderFormWrapperElement.style.filter = "";
+	addOrderFormWrapperElement.style.pointerEvents = "";
+
+	const body = document.body;
+	body.style.overflow = "";
+};
+
+// Open quick new box
+userExperience.openQuickNewBox = () => {
+	const quickNewBoxWrapperElement = document.querySelector(
+		".quick-new-box-wrapper"
+	);
+	quickNewBoxWrapperElement.style.display = "block";
+	window.scrollTo({
+		top: 0,
+		left: 0,
+		behavior: "smooth",
+	});
+	setTimeout(() => {
+		quickNewBoxWrapperElement.style.opacity = "1";
+	}, 200);
+
+	// Blur the add order form wrapper and scroll upwards
+	const addOrderFormWrapperElement = document.querySelector(
+		".add-order-form-wrapper"
+	);
+	addOrderFormWrapperElement.style.filter = "blur(10px)";
+	addOrderFormWrapperElement.style.pointerEvents = "none";
+
+	const body = document.body;
+	if (body.getBoundingClientRect().y === 0) {
+		body.style.overflow = "hidden";
+	} else {
+		function hideOverflow() {
+			if (window.scrollY === 0) {
+				body.style.overflow = "hidden";
+				document.removeEventListener("scroll", hideOverflow);
+			} else {
+				window.scrollTo({
+					top: 0,
+					left: 0,
+					behavior: "smooth",
+				});
+			}
+		}
+		document.addEventListener("scroll", hideOverflow);
+	}
+};
+
+// Create new box
+userExperience.createNewBox = (
+	e,
+	setLoading,
+	istanbul,
+	setNotifyCreation,
+	setBoxChoice,
+	setBoxId,
+	updater,
+	setUpdater,
+	orderOutletUpdater,
+	setOrderOutletUpdater
+) => {
+	const quickNewBoxInfoWrapper = document.querySelector(
+		".quick-new-box-info-wrapper"
+	);
+	quickNewBoxInfoWrapper.style.filter = "blur(10px)";
+	quickNewBoxInfoWrapper.style.pointerEvents = "none";
+
+	setLoading(true);
+
+	setTimeout(() => {
+		istanbul.postNewBox().then((response) => {
+			setLoading(false);
+			setNotifyCreation(true);
+
+			const newlyCreatedBoxIdElement = document.querySelector(
+				".newly-created-box-id"
+			);
+			newlyCreatedBoxIdElement.innerText = response;
+
+			setTimeout(() => {
+				setNotifyCreation(false);
+				quickNewBoxInfoWrapper.style.filter = "blur(0)";
+				quickNewBoxInfoWrapper.style.pointerEvents = "";
+
+				setBoxChoice(response);
+				const boxChoiceInput = document.querySelector(".box-choice");
+				boxChoiceInput.style.outline = "2px solid green";
+				userExperience.closeQuickNewBox();
+
+				setBoxId(response);
+
+				if (updater) {
+					setUpdater(false);
+				} else {
+					setUpdater(true);
+				}
+
+				if (orderOutletUpdater) {
+					setOrderOutletUpdater(false);
+				} else {
+					setOrderOutletUpdater(true);
+				}
+			}, 2000);
+		});
+	}, 400);
+};
+
+// Close quick new box
+userExperience.closeQuickNewBox = () => {
+	const quickNewBoxWrapperElement = document.querySelector(
+		".quick-new-box-wrapper"
+	);
+	quickNewBoxWrapperElement.style.opacity = "0";
+
+	function removeQuickNewCustomer() {
+		quickNewBoxWrapperElement.style.display = "none";
+		quickNewBoxWrapperElement.removeEventListener(
+			"transitionend",
+			removeQuickNewCustomer
+		);
+	}
+	quickNewBoxWrapperElement.addEventListener(
+		"transitionend",
+		removeQuickNewCustomer
+	);
+
+	// Remove blur on add order form wrapper
+	const addOrderFormWrapperElement = document.querySelector(
+		".add-order-form-wrapper"
+	);
+	addOrderFormWrapperElement.style.filter = "";
+	addOrderFormWrapperElement.style.pointerEvents = "";
+
+	const body = document.body;
+	body.style.overflow = "";
+};
+
+// Close all order details
+userExperience.closeAllOrderDetails = () => {
+	const allCrossButtons = document.querySelectorAll(
+		".order-details-cross-icon"
+	);
+	allCrossButtons.forEach((element) => {
+		element.click();
+	});
 };
 
 export { userExperience };

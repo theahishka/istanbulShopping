@@ -1,17 +1,87 @@
 import "./QuickNewCustomer.scss";
 import { userExperience } from "../utils/userExperience";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { istanbul } from "../../../../utils/istanbul";
 import { LoadingSpinner } from "../../../utils/LoadingSpinner";
 
 function QuickNewCustomer(props) {
 	const [loading, setLoading] = useState(false);
+	const [notifyCreation, setNotifyCreation] = useState(false);
 
 	const [newCustomer, setNewCustomer] = useState({
 		fullName: "",
 		address: "",
 		phone: "",
 		comments: "",
+	});
+
+	useEffect(() => {
+		const letters = Array.from(
+			document.querySelectorAll(".element-with-ripple-new-customer")
+		);
+
+		function handleMouseDown(e, letter, timerId) {
+			clearTimeout(timerId);
+			const ripple = e.target.querySelector(".ripple-new-customer");
+			const size = letter.offsetWidth;
+			const pos = letter.getBoundingClientRect();
+			const x = e.x - pos.left - size;
+			const y = e.y - pos.top - size;
+			ripple.style =
+				"top:" +
+				y +
+				"px; left:" +
+				x +
+				"px; width: " +
+				size * 2 +
+				"px; height: " +
+				size * 2 +
+				"px;";
+			ripple.classList.remove("active");
+			ripple.classList.remove("start");
+			setTimeout(() => {
+				ripple.classList.add("start");
+				setTimeout(() => {
+					ripple.classList.add("active");
+				});
+			});
+		}
+
+		function handleMouseUp(e, timerId) {
+			const ripple = e.target.querySelector(".ripple-new-customer");
+			clearTimeout(timerId);
+			timerId = setTimeout(() => {
+				ripple.classList.remove("active");
+				ripple.classList.remove("start");
+			}, 500);
+		}
+
+		letters.forEach((letter) => {
+			let timerId;
+
+			letter.addEventListener("mousedown", function mouseDown(e) {
+				handleMouseDown(e, letter, timerId);
+			});
+
+			letter.addEventListener("mouseup", function mouseUp(e) {
+				handleMouseUp(e, timerId);
+			});
+		});
+
+		return () => {
+			const letters = Array.from(
+				document.querySelectorAll(".element-with-ripple-new-customer")
+			);
+			letters.forEach((letter) => {
+				let timerId;
+				letter.removeEventListener("mousedown", function mouseDown(e) {
+					handleMouseDown(e, letter, timerId);
+				});
+				letter.removeEventListener("mouseup", function mouseUp(e) {
+					handleMouseUp(e, timerId);
+				});
+			});
+		};
 	});
 
 	function updateNewCustomerDetails(e) {
@@ -37,6 +107,10 @@ function QuickNewCustomer(props) {
 			props.setCustomerId,
 			props.setCustomerFullName
 		);
+	}
+
+	function closeQuickNewCustomer() {
+		userExperience.closeQuickNewCustomer();
 	}
 
 	return (
@@ -112,8 +186,13 @@ function QuickNewCustomer(props) {
 						style={{ height: "4rem", padding: "0.5rem" }}
 					></textarea>
 				</div>
-				<button type="submit" onClick={createNewCustomer}>
+				<button
+					type="submit"
+					className="element-with-ripple-new-customer"
+					onClick={createNewCustomer}
+				>
 					Create Customer
+					<div className="ripple-new-customer"></div>
 				</button>
 			</form>
 			{!loading ? null : (
@@ -123,8 +202,14 @@ function QuickNewCustomer(props) {
 			)}
 			<i
 				className="far fa-times-circle"
-				onClick={userExperience.closeQuickNewCustomer}
+				onClick={closeQuickNewCustomer}
 			></i>
+			{!notifyCreation ? null : (
+				<div className="quick-new-customer-notify-creation">
+					<p>New Customer Id:</p>{" "}
+					<p className="newly-created-customer-id"></p>
+				</div>
+			)}
 		</section>
 	);
 }

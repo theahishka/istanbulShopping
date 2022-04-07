@@ -2,6 +2,10 @@ import { userExperience } from "../utils/userExperience";
 import "./CustomerChoice.scss";
 
 function CustomerChoice(props) {
+	function openQuickNewCustomer() {
+		userExperience.openQuickNewCustomer();
+	}
+
 	function validateCustomerInput(e) {
 		userExperience.validateCustomerInput(
 			e,
@@ -39,7 +43,7 @@ function CustomerChoice(props) {
 				/>
 				<i
 					className="fa-solid fa-plus add-new-button"
-					onClick={userExperience.openQuickNewCustomer}
+					onClick={openQuickNewCustomer}
 				></i>
 			</div>
 			<datalist id="customers-list">

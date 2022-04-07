@@ -25,7 +25,9 @@ updateCustomerNumber.validateUpdatedCustomerId = (
 ) => {
 	const value = e.target.value;
 	setUpdatedCustomerId(value);
-	const editCustomerInput = document.querySelector(`.edit-customer-input-${index}`);
+	const editCustomerInput = document.querySelector(
+		`.edit-customer-input-${index}`
+	);
 	for (let i = 0; i < allCustomers.length; i++) {
 		if (allCustomers[i].customer_id === value) {
 			editCustomerInput.style.outline = "2px solid green";
@@ -52,7 +54,9 @@ updateCustomerNumber.updateCustomerId = (
 	if (updatedCustomerId === currentCustomerId) {
 		return endCustomerIdEditing();
 	}
-	const editCustomerInput = document.querySelector(`.edit-customer-input-${index}`);
+	const editCustomerInput = document.querySelector(
+		`.edit-customer-input-${index}`
+	);
 	for (let i = 0; i < allCustomers.length; i++) {
 		if (updatedCustomerId === allCustomers[i].customer_id) {
 			editCustomerInput.style.outline = "2px solid green";
@@ -64,15 +68,16 @@ updateCustomerNumber.updateCustomerId = (
 					boxId
 				)
 				.then(() => {
-					istanbul.getSingleOrder(orderId).then((response) => {
-						if (orderOutletUpdater) {
-							setOrderOutletUpdater(false);
-						} else {
-							setOrderOutletUpdater(true);
-						}
-						setOrderDetails(response);
-						endCustomerIdEditing();
-					});
+					return istanbul.getSingleOrder(orderId);
+				})
+				.then((response) => {
+					if (orderOutletUpdater) {
+						setOrderOutletUpdater(false);
+					} else {
+						setOrderOutletUpdater(true);
+					}
+					setOrderDetails(response);
+					endCustomerIdEditing();
 				});
 			break;
 		} else {
@@ -81,7 +86,11 @@ updateCustomerNumber.updateCustomerId = (
 	}
 };
 
-updateCustomerNumber.endCustomerIdEditing = (setEditMode, setEditCustomer, index) => {
+updateCustomerNumber.endCustomerIdEditing = (
+	setEditMode,
+	setEditCustomer,
+	index
+) => {
 	const saveUpdatedCustomerId = document.querySelector(
 		`.save-updated-customer-id-${index}`
 	);

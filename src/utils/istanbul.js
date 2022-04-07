@@ -80,6 +80,17 @@ istanbul.postNewOrder = (newOrder) => {
 	});
 };
 
+istanbul.deleteOrder = (orderId) => {
+	const url = `${baseUrl}/orders/${orderId}`;
+
+	return fetch(url, {
+		method: "DELETE",
+		headers: {
+			"Content-Type": "application/json",
+		},
+	});
+};
+
 istanbul.putCustomerInOrder = (
 	orderId,
 	updatedCustomerId,
@@ -182,6 +193,68 @@ istanbul.deletePaymentInOrder = (orderId, paymentId) => {
 		body: JSON.stringify({
 			paymentId: paymentId,
 		}),
+	});
+};
+
+istanbul.putTotalDeliveryCostInOrder = (
+	orderId,
+	totalDeliveryCost,
+	oldTotalDeliveryCost
+) => {
+	const url = `${baseUrl}/orders/${orderId}/total-delivery-cost`;
+
+	return fetch(url, {
+		method: "PUT",
+		headers: {
+			"Content-Type": "application/json",
+		},
+		body: JSON.stringify({
+			totalDeliveryCost: totalDeliveryCost,
+			oldTotalDeliveryCost: oldTotalDeliveryCost,
+		}),
+	});
+};
+
+istanbul.postItemInOrder = () => {};
+
+istanbul.putItemsInOrder = (
+	orderId,
+	itemId,
+	column,
+	newInfo,
+	oldRevenue,
+	oldItemCost,
+	oldItemDeliveryCost,
+	oldItemAirwayCost
+) => {
+	const url = `${baseUrl}/orders/${orderId}/items`;
+
+	return fetch(url, {
+		method: "PUT",
+		headers: {
+			"Content-Type": "application/json",
+		},
+		body: JSON.stringify({
+			itemId: itemId,
+			column: column,
+			newInfo: newInfo,
+			oldRevenue: oldRevenue,
+			oldItemCost: oldItemCost,
+			oldItemDeliveryCost: oldItemDeliveryCost,
+			oldItemAirwayCost: oldItemAirwayCost,
+		}),
+	});
+};
+
+istanbul.deleteItemInOrder = (orderId, itemId) => {
+	const url = `${baseUrl}/orders/${orderId}/items`;
+
+	return fetch(url, {
+		method: "DELETE",
+		headers: {
+			"Content-Type": "application/json",
+		},
+		body: JSON.stringify({ itemId: itemId }),
 	});
 };
 
