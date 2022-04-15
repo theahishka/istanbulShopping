@@ -114,7 +114,6 @@ userExperience.openOrderDetails = (
 	orderId,
 	setState,
 	istanbul,
-	state
 ) => {
 	const loadingSpinner = e.target.previousElementSibling;
 	loadingSpinner.style.display = "inline-block";

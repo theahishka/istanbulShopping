@@ -215,7 +215,17 @@ istanbul.putTotalDeliveryCostInOrder = (
 	});
 };
 
-istanbul.postItemInOrder = () => {};
+istanbul.postItemInOrder = (orderId, newItem) => {
+	const url = `${baseUrl}/orders/${orderId}/item`;
+
+	return fetch(url, {
+		method: "POST",
+		headers: {
+			"Content-Type": "application/json",
+		},
+		body: JSON.stringify({ newItem }),
+	});
+};
 
 istanbul.putItemsInOrder = (
 	orderId,

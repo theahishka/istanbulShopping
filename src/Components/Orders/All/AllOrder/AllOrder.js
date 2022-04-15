@@ -24,8 +24,12 @@ function AllOrder(props) {
 	};
 
 	// Dynamic calculation of max height for smoother closing and opening animation of a single order
-	let numberOfItems = props.orderInfo.number_of_items;
-	let numberOfPayments = props.orderInfo.number_of_payments;
+	const [numberOfItems, setNumberOfItems] = useState(
+		props.orderInfo.number_of_items
+	);
+	const [numberOfPayments, setNumberOfPayments] = useState(
+		props.orderInfo.number_of_payments
+	);
 	let calculatedMaxHeight = 550 * numberOfItems + 24 * numberOfPayments + 350;
 
 	const closeOrderDetails = (e) => {
@@ -65,6 +69,8 @@ function AllOrder(props) {
 						setOrderOutletUpdater={props.setOrderOutletUpdater}
 						setOrderDetails={setOrderDetails}
 						allOrderIndex={props.allOrderIndex}
+						setNumberOfPayments={setNumberOfPayments}
+						openOrderDetails={openOrderDetails}
 					/>
 					<CustomerInfo
 						customerInfo={orderDetails.customerInfo}
@@ -94,6 +100,8 @@ function AllOrder(props) {
 							setOrderDetails={setOrderDetails}
 							orderOutletUpdater={props.orderOutletUpdater}
 							setOrderOutletUpdater={props.setOrderOutletUpdater}
+							setNumberOfItems={setNumberOfItems}
+							openOrderDetails={openOrderDetails}
 						/>
 						<p
 							className="show-details"

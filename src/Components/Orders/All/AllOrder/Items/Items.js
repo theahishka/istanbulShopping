@@ -1,15 +1,29 @@
 import "./Items.scss";
 import { Item } from "./Item/Item";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { istanbul } from "../../../../../utils/istanbul";
+import { updateItems as updateItemsFile } from "./updateItems";
+import { createNewItem as createNewItemFile } from "./createNewItem";
 
 function Items(props) {
 	const [editMode, setEditMode] = useState(false);
 
 	const [editNewItem, setEditNewItem] = useState(false);
 
+	const [updatedNewItem, setUpdatedNewItem] = useState({
+		brand: "",
+		name: "",
+		type: "",
+		color: "",
+		size: "",
+		sellingPrice: "",
+		buyingPrice: "",
+	});
+
 	let editNewItemElement = editNewItem ? (
-		<form className="new-item-in-order-form">
+		<form
+			className={`new-item-in-order-form new-item-in-order-form-${props.allOrderIndex}`}
+		>
 			<div className="new-item">
 				<h4>New Item</h4>
 				<div className="item-input-wrapper">
@@ -22,8 +36,8 @@ function Items(props) {
 						id="brand"
 						placeholder="Louis Vuitton"
 						type="text"
-						// value={props.item.brand}
-						// onChange={changeItemInfoState}
+						value={updatedNewItem.brand}
+						onChange={validateNewItem}
 						required
 					></input>
 				</div>
@@ -37,8 +51,8 @@ function Items(props) {
 						id="name"
 						placeholder="Long Sleeve Shirt"
 						type="text"
-						// value={props.item.name}
-						// onChange={changeItemInfoState}
+						value={updatedNewItem.name}
+						onChange={validateNewItem}
 						required
 					></input>
 				</div>
@@ -52,8 +66,8 @@ function Items(props) {
 						id="type"
 						placeholder="Shirt"
 						type="text"
-						// value={props.item.type}
-						// onChange={changeItemInfoState}
+						value={updatedNewItem.type}
+						onChange={validateNewItem}
 						required
 					></input>
 				</div>
@@ -67,8 +81,8 @@ function Items(props) {
 						id="color"
 						placeholder="Black"
 						type="text"
-						// value={props.item.color}
-						// onChange={changeItemInfoState}
+						value={updatedNewItem.color}
+						onChange={validateNewItem}
 					></input>
 				</div>
 				<div className="item-input-wrapper">
@@ -81,8 +95,8 @@ function Items(props) {
 						id="size"
 						placeholder="Medium"
 						type="text"
-						// value={props.item.size}
-						// onChange={changeItemInfoState}
+						value={updatedNewItem.size}
+						onChange={validateNewItem}
 					></input>
 				</div>
 				<div className="item-input-wrapper">
@@ -95,8 +109,8 @@ function Items(props) {
 						id="sellingPrice"
 						placeholder="100"
 						type="number"
-						// value={props.item.sellingPrice}
-						// onChange={changeItemInfoState}
+						value={updatedNewItem.sellingPrice}
+						onChange={validateNewItem}
 						required
 					></input>
 				</div>
@@ -110,16 +124,20 @@ function Items(props) {
 						id="buyingPrice"
 						placeholder="80"
 						type="number"
-						// value={props.item.buyingPrice}
-						// onChange={changeItemInfoState}
+						value={updatedNewItem.buyingPrice}
+						onChange={validateNewItem}
 						required
 					></input>
 				</div>
-				<div className="create-new-item-in-order-button">
+				<button
+					type="submit"
+					className="create-new-item-in-order-button"
+					onClick={createNewItem}
+				>
 					Create Item
-				</div>
+				</button>
 				<i
-					className="far fa-times-circle order-details-cross-icon"
+					className="far fa-times-circle create-new-item-cross-icon"
 					onClick={endNewItemEditing}
 				></i>
 			</div>
@@ -177,10 +195,140 @@ function Items(props) {
 	}
 
 	// Validate new item information from input field and update appropriate state
-	function validateNewItem() {}
+	function validateNewItem(e) {
+		let value = e.target.value;
+		let stateName = e.target.attributes.name.value;
+		e.target.style.outline = "none";
+		setUpdatedNewItem((prev) => {
+			let newState = { ...prev };
+			newState[stateName] = value;
+			return newState;
+		});
+	}
 
 	// Create new item and update information in database
-	function createNewItem() {}
+	function createNewItem(e) {
+		let brand = updatedNewItem.brand;
+		let name = updatedNewItem.name;
+		let type = updatedNewItem.type;
+		let color = updatedNewItem.color;
+		let size = updatedNewItem.size;
+		let buyingPrice = updatedNewItem.buyingPrice;
+		let sellingPrice = updatedNewItem.sellingPrice;
+
+		if (!brand) {
+			const brandInputElement = document.querySelector(
+				`.new-item-in-order-form-${props.allOrderIndex}`
+			).children[0].children[1].children[1];
+			brandInputElement.style.outline = "2px solid red";
+		}
+		if (!name) {
+			const nameInputElement = document.querySelector(
+				`.new-item-in-order-form-${props.allOrderIndex}`
+			).children[0].children[2].children[1];
+			nameInputElement.style.outline = "2px solid red";
+		}
+
+		if (!type) {
+			const typeInputElement = document.querySelector(
+				`.new-item-in-order-form-${props.allOrderIndex}`
+			).children[0].children[3].children[1];
+			typeInputElement.style.outline = "2px solid red";
+		}
+
+		if (!color) {
+			const colorInputElement = document.querySelector(
+				`.new-item-in-order-form-${props.allOrderIndex}`
+			).children[0].children[4].children[1];
+			colorInputElement.style.outline = "2px solid red";
+		}
+
+		if (!size) {
+			const sizeInputElement = document.querySelector(
+				`.new-item-in-order-form-${props.allOrderIndex}`
+			).children[0].children[5].children[1];
+			sizeInputElement.style.outline = "2px solid red";
+		}
+
+		if (!sellingPrice) {
+			const sellingPriceInputElement = document.querySelector(
+				`.new-item-in-order-form-${props.allOrderIndex}`
+			).children[0].children[6].children[1];
+			sellingPriceInputElement.style.outline = "2px solid red";
+		}
+
+		if (!buyingPrice) {
+			const buyingPriceInputElement = document.querySelector(
+				`.new-item-in-order-form-${props.allOrderIndex}`
+			).children[0].children[7].children[1];
+			buyingPriceInputElement.style.outline = "2px solid red";
+		}
+
+		if (
+			!brand ||
+			!name ||
+			!type ||
+			!color ||
+			!size ||
+			!buyingPrice ||
+			!sellingPrice
+		) {
+			return;
+		}
+
+		e.preventDefault();
+
+		return istanbul
+			.postItemInOrder(props.orderInfo.order_id, updatedNewItem)
+			.then(() => {
+				endNewItemEditing();
+				return istanbul.getSingleOrder(props.orderInfo.order_id);
+			})
+			.then((response) => {
+				endItemsEditing();
+				setEditItems((perv) => {
+					let newState = {};
+					response.itemsInfo.forEach((item, index) => {
+						newState[`item${index + 1}`] = {
+							brand: false,
+							name: false,
+							type: false,
+							color: false,
+							size: false,
+							revenue: false,
+							itemCost: false,
+						};
+					});
+					return newState;
+				});
+				setUpdatedItems((prev) => {
+					let newState = {};
+					props.itemsInfo.forEach((item, index) => {
+						newState[`item${index + 1}`] = {
+							itemId: item.item_id,
+							brand: item.brand,
+							name: item.name,
+							type: item.type,
+							color: item.color,
+							size: item.size,
+							revenue: item.revenue,
+							itemCost: item.item_cost,
+						};
+					});
+					return newState;
+				});
+
+				if (props.orderOutletUpdater) {
+					props.setOrderOutletUpdater(false);
+				} else {
+					props.setOrderOutletUpdater(true);
+				}
+				props.setOrderDetails(response);
+
+				props.setNumberOfItems(response.itemsInfo.length);
+				props.openOrderDetails();
+			});
+	}
 
 	// End new item editing
 	function endNewItemEditing() {
@@ -189,214 +337,60 @@ function Items(props) {
 
 	// Start item editing by clicking edit
 	function startItemEditing(e) {
-		setEditItems((prev) => {
-			let newState = { ...prev };
-			newState[`item${Number(e.target.attributes.index.value) + 1}`][
-				e.target.attributes.name.value
-			] = true;
-			return newState;
-		});
-		e.target.style.display = "none";
-		e.target.nextElementSibling.style.display = "inline-block";
-		setUpdatedItems((prev) => {
-			let newState = {};
-			props.itemsInfo.forEach((item, index) => {
-				newState[`item${index + 1}`] = {
-					itemId: item.item_id,
-					brand: item.brand,
-					name: item.name,
-					type: item.type,
-					color: item.color,
-					size: item.size,
-					revenue: item.revenue,
-					itemCost: item.item_cost,
-				};
-			});
-			return newState;
-		});
+		updateItemsFile.startItemEditing(
+			e,
+			setEditItems,
+			setUpdatedItems,
+			props.itemsInfo
+		);
 	}
 
 	// Validating value from an input field and updating appropriate state
 	function validateUpdatedItem(e) {
-		let value = e.target.value;
-		e.target.style.outline = "";
-		setUpdatedItems((prev) => {
-			let newState = { ...prev };
-			newState[`item${Number(e.target.attributes.index.value) + 1}`][
-				e.target.attributes.name.value
-			] = value;
-			return newState;
-		});
+		updateItemsFile.validateUpdatedItem(e, setUpdatedItems);
 	}
 
 	// Update item detail in database and rerender new information
 	function updateItems(e) {
-		let index = Number(e.target.attributes.index.value);
-		let inputElement =
-			e.target.previousElementSibling.previousElementSibling;
-		let type = inputElement.attributes.type.value;
-		let value = inputElement.value;
-		let sqlname = inputElement.attributes.sqlname.value;
-		let name = inputElement.attributes.name.value;
-		let itemId = props.itemsInfo[index].item_id;
-
-		function endSingleItemInputEditing() {
-			inputElement.style.outline = "";
-			e.target.style.display = "none";
-			e.target.previousElementSibling.style.display = "inline-block";
-			return setEditItems((prev) => {
-				let newState = { ...prev };
-				newState[`item${index + 1}`][name] = false;
-				return newState;
-			});
-		}
-
-		function updateSingleItemInput() {
-			istanbul
-				.putItemsInOrder(
-					props.orderInfo.order_id,
-					itemId,
-					sqlname,
-					value,
-					props.itemsInfo[index].revenue,
-					props.itemsInfo[index].item_cost,
-					props.itemsInfo[index].item_delivery_cost,
-					props.itemsInfo[index].item_airway_cost
-				)
-				.then(() => {
-					return istanbul.getSingleOrder(props.orderInfo.order_id);
-				})
-				.then((response) => {
-					if (props.orderOutletUpdater) {
-						props.setOrderOutletUpdater(false);
-					} else {
-						props.setOrderOutletUpdater(true);
-					}
-					props.setOrderDetails(response);
-
-					endItemsEditing();
-				});
-		}
-
-		if (type === "text") {
-			if (value === props.itemsInfo[index][sqlname]) {
-				return endSingleItemInputEditing();
-			}
-			if (name === "brand" || name === "name" || name === "type") {
-				if (value === "") {
-					return (inputElement.style.outline = "2px solid red");
-				}
-			}
-			return updateSingleItemInput();
-		} else {
-			if (Number(value) === props.itemsInfo[index][sqlname]) {
-				return endSingleItemInputEditing();
-			}
-			if (value === "" || Number(value) === 0) {
-				return (inputElement.style.outline = "2px solid red");
-			}
-			return updateSingleItemInput();
-		}
+		updateItemsFile.updateItems(
+			e,
+			props.itemsInfo,
+			setEditItems,
+			istanbul,
+			props.orderInfo,
+			props.orderOutletUpdater,
+			props.setOrderOutletUpdater,
+			props.setOrderDetails,
+			endItemsEditing
+		);
 	}
 
 	// Delete single item in database
 	function deleteSingleItem(e) {
-		let index = Number(e.target.attributes.index.value);
-		const countdownElement = e.target.firstElementChild;
-		let intervals = {};
-		if (deleteConfirmation[`item${index + 1}`] === false) {
-			let seconds = 0;
-			countdownElement.style.background =
-				"conic-gradient(#10171E 0deg, #F0F1F3 0deg)";
-			setDeleteConfirmation((prev) => {
-				let newState = { ...prev };
-				newState[`item${index + 1}`] = true;
-				return newState;
-			});
-
-			intervals[`interval${index + 1}`] = setInterval(() => {
-				seconds = seconds + 0.01;
-				countdownElement.style.background = `conic-gradient(#10171E ${
-					(seconds / 1) * 360
-				}deg, #F0F1F3 ${(seconds / 1) * 360}deg)`;
-				if (seconds > 1) {
-					countdownElement.style.background =
-						"conic-gradient(#10171E 0deg, #E7BF72 0deg)";
-					setDeleteConfirmation((prev) => {
-						let newState = { ...prev };
-						newState[`item${index + 1}`] = false;
-						return newState;
-					});
-					clearInterval(intervals[`interval${index + 1}`]);
-				}
-			}, 10);
-		} else if (deleteConfirmation[`item${index + 1}`] === true) {
-			setDeleteConfirmation((prev) => {
-				let newState = { ...prev };
-				newState[`item${index + 1}`] = false;
-				return newState;
-			});
-			istanbul
-				.deleteItemInOrder(
-					props.orderInfo.order_id,
-					props.itemsInfo[index].item_id
-				)
-				.then(() => {
-					return istanbul.getSingleOrder(props.orderInfo.order_id);
-				})
-				.then((response) => {
-					if (props.orderOutletUpdater) {
-						props.setOrderOutletUpdater(false);
-					} else {
-						props.setOrderOutletUpdater(true);
-					}
-					props.setOrderDetails(response);
-					endItemsEditing();
-				});
-		}
+		updateItemsFile.deleteSingleItem(
+			e,
+			deleteConfirmation,
+			setDeleteConfirmation,
+			istanbul,
+			props.orderInfo,
+			props.itemsInfo,
+			props.orderOutletUpdater,
+			props.setOrderOutletUpdater,
+			props.setOrderDetails,
+			endItemsEditing
+		);
 	}
 
 	// Close items editing mode
 	function endItemsEditing() {
-		setEditMode(false);
-		setEditNewItem(false);
-		setEditItems((prev) => {
-			let newState = {};
-			props.itemsInfo.forEach((item, index) => {
-				newState[`item${index + 1}`] = {
-					brand: false,
-					name: false,
-					type: false,
-					color: false,
-					size: false,
-					revenue: false,
-					itemCost: false,
-				};
-			});
-			return newState;
-		});
-		const saveUpdatedItems = document.querySelectorAll(
-			`.save-updated-item-${props.allOrderIndex}`
+		updateItemsFile.endItemsEditing(
+			setEditMode,
+			setEditNewItem,
+			setEditItems,
+			props.itemsInfo,
+			props.allOrderIndex,
+			setUpdatedItems
 		);
-		saveUpdatedItems.forEach((element) => {
-			element.style.display = "none";
-		});
-		setUpdatedItems((prev) => {
-			let newState = {};
-			props.itemsInfo.forEach((item, index) => {
-				newState[`item${index + 1}`] = {
-					itemId: item.item_id,
-					brand: item.brand,
-					name: item.name,
-					type: item.type,
-					color: item.color,
-					size: item.size,
-					revenue: item.revenue,
-					itemCost: item.item_cost,
-				};
-			});
-			return newState;
-		});
 	}
 
 	return (
