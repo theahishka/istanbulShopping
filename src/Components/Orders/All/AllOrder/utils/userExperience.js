@@ -59,11 +59,7 @@ userExperience.toggleDetailedProfitBreakdown = (e, state, setState) => {
 };
 
 // Close order details by clicking cross icon on the top right corner
-userExperience.closeOrderDetails = (
-	e,
-	setState,
-	setOrderDetails,
-) => {
+userExperience.closeOrderDetails = (e, setState, setOrderDetails) => {
 	const detailedOrderElement = e.target.parentElement;
 	function removeBubblingEffect(event) {
 		event.stopPropagation();
@@ -113,7 +109,7 @@ userExperience.openOrderDetails = (
 	calculatedMaxHeight,
 	orderId,
 	setState,
-	istanbul,
+	istanbul
 ) => {
 	const loadingSpinner = e.target.previousElementSibling;
 	loadingSpinner.style.display = "inline-block";
@@ -128,7 +124,8 @@ userExperience.openOrderDetails = (
 			allOrderElement.style.maxHeight = `${calculatedMaxHeight + 700}px`;
 			allOrderElement.style.height = "auto";
 
-			loadingSpinner.style.display = "none";
+			e.target.previousElementSibling.style.display = "none";
+
 			orderOverviewElement.style.display = "none";
 
 			function animateDetailedOrderElement() {

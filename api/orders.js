@@ -1,5 +1,4 @@
 const express = require("express");
-const { compileString } = require("sass");
 const ordersRouter = express.Router();
 const Pool = require("pg").Pool;
 const connection = {
@@ -19,16 +18,18 @@ ordersRouter.param("orderId", (req, res, next, orderId) => {
 	const pool = new Pool(connection);
 	pool.connect((err) => {
 		if (err) {
-			return console.log(err);
+			console.log(err);
+			return res.status(500).send();
 		}
 		pool.query(
 			"SELECT * FROM orders WHERE order_id = $1",
 			[orderId],
 			(err, data) => {
 				if (err) {
-					return console.log(err);
+					console.log(err);
+					return res.status(500).send();
 				}
-				if (!data) {
+				if (data.rows.length < 1) {
 					return res.status(404).send("No such order found");
 				}
 				req.order = data.rows;

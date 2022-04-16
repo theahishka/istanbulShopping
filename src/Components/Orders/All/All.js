@@ -49,25 +49,23 @@ function All(props) {
 				</h4>
 			</div>
 			<div className="all-orders">
-				{all.orders.map((order, index) => {
-					return (
-						<AllOrder
-							orderInfo={order}
-							orderOutletUpdater={props.orderOutletUpdater}
-							setOrderOutletUpdater={props.setOrderOutletUpdater}
-							key={`order${index + 1}`}
-							allOrderIndex={index}
-						/>
-					);
-				})}
-				<AllOrder orderInfo={all.orders[0]} />
-				<AllOrder orderInfo={all.orders[0]} />
-				<AllOrder orderInfo={all.orders[0]} />
-				<AllOrder orderInfo={all.orders[0]} />
-				<AllOrder orderInfo={all.orders[0]} />
-				<AllOrder orderInfo={all.orders[0]} />
-				<AllOrder orderInfo={all.orders[0]} />
-				<AllOrder orderInfo={all.orders[0]} />
+				{all.orders.length > 0
+					? all.orders.map((order, index) => {
+							return (
+								<AllOrder
+									orderInfo={order}
+									orderOutletUpdater={
+										props.orderOutletUpdater
+									}
+									setOrderOutletUpdater={
+										props.setOrderOutletUpdater
+									}
+									key={`order${index + 1}`}
+									allOrderIndex={index}
+								/>
+							);
+					  })
+					: null}
 			</div>
 		</section>
 	);

@@ -303,7 +303,7 @@ function Items(props) {
 				});
 				setUpdatedItems((prev) => {
 					let newState = {};
-					props.itemsInfo.forEach((item, index) => {
+					response.itemsInfo.forEach((item, index) => {
 						newState[`item${index + 1}`] = {
 							itemId: item.item_id,
 							brand: item.brand,
@@ -317,6 +317,13 @@ function Items(props) {
 					});
 					return newState;
 				});
+				setDeleteConfirmation((prev) => {
+					let newState = {};
+					response.itemsInfo.forEach((item, index) => {
+						newState[`item${index + 1}`] = false;
+					});
+					return newState;
+				});
 
 				if (props.orderOutletUpdater) {
 					props.setOrderOutletUpdater(false);
@@ -325,8 +332,19 @@ function Items(props) {
 				}
 				props.setOrderDetails(response);
 
-				props.setNumberOfItems(response.itemsInfo.length);
-				props.openOrderDetails();
+				const allOrderElement = document.querySelector(
+					`.all-order-${props.allOrderIndex}`
+				);
+				allOrderElement.style.maxHeight = `${
+					props.calculatedMaxHeight + 700 + 500
+				}px`;
+
+				const detailedProfitBreakdownElement = document.querySelector(
+					`.detailed-profit-breakdown-${props.allOrderIndex}`
+				);
+				detailedProfitBreakdownElement.style.maxHeight = `${
+					props.calculatedMaxHeight + 500
+				}px`;
 			});
 	}
 
@@ -395,7 +413,7 @@ function Items(props) {
 
 	return (
 		<div
-			className={`detailed-profit-breakdown`}
+			className={`detailed-profit-breakdown detailed-profit-breakdown-${props.allOrderIndex}`}
 			style={{
 				maxHeight: `${
 					props.detailedProfitBreakdownOpened
