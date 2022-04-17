@@ -1,0 +1,24 @@
+.box-number {
+    text-decoration: underline;
+    text-underline-offset: 4px;
+    cursor: pointer;
+    pointer-events: auto;
+}
+
+.edit-box-input {
+	display: inline-block;
+	width: 40px;
+	text-align: center;
+	height: 1.2rem;
+    border: 1px solid hsl(168, 35%, 20%);
+	border-radius: 3px;
+}
+
+.save-updated-box-id {
+	margin-left: 1rem;
+	cursor: pointer;
+	background-color: hsl(168, 35%, 20%);
+	color: white;
+	padding: 3px;
+	display: none;
+}

@@ -1,6 +1,6 @@
 const express = require("express");
 const ordersRouter = express.Router();
-const Pool = require("pg").Pool;
+const Pool = require("pg").Client;
 const connection = {
 	user: "postgres",
 	password: "154816",
@@ -10,125 +10,105 @@ const connection = {
 };
 
 // Verifying the orderId parameter was passed successfully and if such an order exists
-ordersRouter.param("orderId", (req, res, next, orderId) => {
-	if (!orderId) {
-		console.log("Nothing was passed in the orderId parameter");
-		return res.status(404).send();
-	}
-	const pool = new Pool(connection);
-	pool.connect((err) => {
-		if (err) {
-			console.log(err);
-			return res.status(500).send();
+ordersRouter.param("orderId", async (req, res, next, orderId) => {
+	try {
+		if (!orderId) {
+			console.log("Nothing was passed in the orderId parameter");
+			return res.status(404).send();
 		}
-		pool.query(
+
+		const pool = new Pool(connection);
+		await pool.connect();
+
+		const orders = await pool.query(
 			"SELECT * FROM orders WHERE order_id = $1",
-			[orderId],
-			(err, data) => {
-				if (err) {
-					console.log(err);
-					return res.status(500).send();
-				}
-				if (data.rows.length < 1) {
-					return res.status(404).send("No such order found");
-				}
-				req.order = data.rows;
-				pool.end();
-				return next();
-			}
+			[orderId]
 		);
-	});
+
+		if (orders.rows.length < 1) {
+			return res.status(404).send("No such order found");
+		}
+
+		req.order = orders.rows;
+
+		await pool.end();
+		return next();
+	} catch (err) {
+		console.log(err);
+	}
 });
 
 // For getting all orders
-ordersRouter.get("/", (req, res, next) => {
-	let all = {};
-	const pool = new Pool(connection);
-	pool.connect((err) => {
-		if (err) {
-			return console.log(err);
-		}
-		pool.query(
-			"SELECT * FROM orders ORDER BY order_id DESC",
-			(err, data) => {
-				if (err) {
-					return console.log(err);
-				}
-				all.total = data.rowCount;
-				all.orders = data.rows;
-				pool.query(
-					"SELECT COUNT(*) FROM orders WHERE pending = $1",
-					["true"],
-					(err, data) => {
-						if (err) {
-							return console.log(err);
-						}
-						all.pending = Number(data.rows[0].count);
-						all.completed = all.total - all.pending;
-						pool.query(
-							"SELECT COUNT(*) FROM boxes",
-							(err, data) => {
-								if (err) {
-									console.log(err);
-								}
-								all.boxes = Number(data.rows[0].count);
-								res.status(200).send(all);
-								pool.end();
-							}
-						);
-					}
-				);
-			}
+ordersRouter.get("/", async (req, res, next) => {
+	try {
+		let all = {};
+		const pool = new Pool(connection);
+
+		await pool.connect();
+
+		const orders = await pool.query(
+			"SELECT * FROM orders ORDER BY order_id DESC"
 		);
-	});
+		all.total = orders.rowCount;
+		all.orders = orders.rows;
+
+		const pendingOrders = await pool.query(
+			"SELECT * FROM orders WHERE pending = $1 ORDER BY order_id DESC",
+			["true"]
+		);
+		all.pendingOrders = pendingOrders.rows;
+
+		const pendingCount = await pool.query(
+			"SELECT COUNT(*) FROM orders WHERE pending = $1",
+			["true"]
+		);
+		all.pending = Number(pendingCount.rows[0].count);
+
+		all.completed = all.total - all.pending;
+
+		const boxes = await pool.query("SELECT COUNT(*) FROM boxes");
+		all.boxes = Number(boxes.rows[0].count);
+
+		await pool.end();
+		return res.status(200).send(all);
+	} catch (err) {
+		console.log(err);
+	}
 });
 
 // For getting detailed information for a single order
-ordersRouter.get("/:orderId", (req, res, next) => {
-	const orderDetails = {};
+ordersRouter.get("/:orderId", async (req, res, next) => {
+	try {
+		const orderDetails = {};
 
-	const pool = new Pool(connection);
-	pool.connect((err) => {
-		if (err) {
-			return console.log(err);
-		}
-		pool.query(
+		const pool = new Pool(connection);
+		await pool.connect();
+
+		const customer = await pool.query(
 			"SELECT * FROM customers WHERE customer_id = $1",
-			[req.order[0].customer_id],
-			(err, data) => {
-				if (err) {
-					return console.log(err);
-				}
-				orderDetails.customerInfo = data.rows[0];
-
-				pool.query(
-					"SELECT * FROM order_payments_" +
-						req.params.orderId +
-						" ORDER BY payment_id ASC",
-					(err, data) => {
-						if (err) {
-							return console.log(err);
-						}
-						orderDetails.paymentsInfo = data.rows;
-
-						pool.query(
-							"SELECT * FROM order_items_" +
-								req.params.orderId +
-								" ORDER BY item_id ASC",
-							(err, data) => {
-								if (err) {
-									return console.log(err);
-								}
-								orderDetails.itemsInfo = data.rows;
-								res.status(200).send(orderDetails);
-								pool.end();
-							}
-						);
-					}
-				);
-			}
+			[req.order[0].customer_id]
 		);
-	});
+		orderDetails.customerInfo = customer.rows[0];
+
+		const payments = await pool.query(
+			"SELECT * FROM order_payments_" +
+				req.params.orderId +
+				" ORDER BY payment_id ASC"
+		);
+		orderDetails.paymentsInfo = payments.rows;
+
+		const items = await pool.query(
+			"SELECT * FROM order_items_" +
+				req.params.orderId +
+				" ORDER BY item_id ASC"
+		);
+		orderDetails.itemsInfo = items.rows;
+
+		await pool.end();
+		return res.status(200).send(orderDetails);
+	} catch (err) {
+		console.log(err);
+	}
 });
 
 // Posting new order
@@ -175,7 +155,6 @@ ordersRouter.post("/", async (req, res, next) => {
 		let createdDate = new Date(Date.now());
 
 		const pool = new Pool(connection);
-
 		await pool.connect();
 
 		const returnedNewOrder = await pool.query(
@@ -304,8 +283,9 @@ ordersRouter.post("/", async (req, res, next) => {
 				);
 			}
 		}
-		res.status(201).send(orderId);
+
 		await pool.end();
+		return res.status(201).send(orderId);
 	} catch (err) {
 		console.log(err);
 	}
@@ -333,8 +313,8 @@ ordersRouter.delete("/:orderId", async (req, res, next) => {
 		await pool.query("DROP TABLE IF EXISTS order_items_" + orderId);
 		await pool.query("DROP TABLE IF EXISTS order_payments_" + orderId);
 
-		res.status(204).send();
 		await pool.end();
+		return res.status(204).send();
 	} catch (err) {
 		console.log(err);
 	}
@@ -350,6 +330,7 @@ ordersRouter.put("/:orderId/customer", async (req, res, next) => {
 
 		const pool = new Pool(connection);
 		await pool.connect();
+
 		const updatedCustomer = await pool.query(
 			"SELECT * FROM customers WHERE customer_id = $1",
 			[updatedCustomerId]
@@ -360,7 +341,6 @@ ordersRouter.put("/:orderId/customer", async (req, res, next) => {
 			"UPDATE orders SET customer_id = $1, customer_full_name = $2 WHERE order_id = $3 RETURNING *",
 			[updatedCustomerId, updatedCustomerFullName, orderId]
 		);
-
 		const updatedOrder = updatedOrderArray.rows[0];
 
 		await pool.query(
@@ -400,11 +380,13 @@ ordersRouter.put("/:orderId/customer", async (req, res, next) => {
 			]
 		);
 
-		res.status(200).send(
-			"Order has been reallocated to another customer successfully"
-		);
-
 		await pool.end();
+
+		return res
+			.status(200)
+			.send(
+				"Order has been reallocated to another customer successfully"
+			);
 	} catch (err) {
 		console.log(err);
 	}
@@ -464,11 +446,10 @@ ordersRouter.put("/:orderId/box", async (req, res, next) => {
 			]
 		);
 
-		res.status(200).send(
-			"Order has been reallocated to another box successfully"
-		);
-
 		await pool.end();
+		return res
+			.status(200)
+			.send("Order has been reallocated to another box successfully");
 	} catch (err) {
 		console.log(err);
 	}
@@ -521,9 +502,10 @@ ordersRouter.put("/:orderId/delivered-date", async (req, res, next) => {
 			[updatedDeliveredDate, pending, orderId]
 		);
 
-		res.status(200).send("Delivery date has been updated successfully");
-
 		await pool.end();
+		return res
+			.status(200)
+			.send("Delivery date has been updated successfully");
 	} catch (err) {
 		console.log(err);
 	}
@@ -591,9 +573,8 @@ ordersRouter.post("/:orderId/payment", async (req, res, next) => {
 			[outstanding, pending, payments.rows.length, orderId]
 		);
 
-		res.status(201).send();
-
 		await pool.end();
+		return res.status(201).send();
 	} catch (err) {
 		console.log(err);
 	}
@@ -660,8 +641,8 @@ ordersRouter.put("/:orderId/payments", async (req, res, next) => {
 			[outstanding, pending, orderId]
 		);
 
-		res.status(200).send();
 		await pool.end();
+		return res.status(200).send();
 	} catch (err) {
 		console.log(err);
 	}
@@ -731,8 +712,8 @@ ordersRouter.delete("/:orderId/payment", async (req, res, next) => {
 			[outstanding, pending, payments.rows.length, orderId]
 		);
 
-		res.status(204).send();
 		await pool.end();
+		return res.status(204).send();
 	} catch (err) {
 		console.log(err);
 	}
@@ -804,9 +785,8 @@ ordersRouter.put("/:orderId/total-delivery-cost", async (req, res, next) => {
 			);
 		}
 
-		res.status(200).send();
-
 		await pool.end();
+		return res.status(200).send();
 	} catch (err) {
 		console.log(err);
 	}
@@ -996,8 +976,8 @@ ordersRouter.post("/:orderId/item", async (req, res, next) => {
 			]
 		);
 
-		res.status(201).send();
 		await pool.end();
+		return res.status(201).send();
 	} catch (err) {
 		console.log(err);
 	}
@@ -1108,8 +1088,8 @@ ordersRouter.put("/:orderId/items", async (req, res, next) => {
 				]
 			);
 
-			res.status(200).send();
-			return await pool.end();
+			await pool.end();
+			return res.status(200).send();
 		}
 
 		if (column === "item_cost") {
@@ -1171,8 +1151,8 @@ ordersRouter.put("/:orderId/items", async (req, res, next) => {
 				[newTotalCosts, newTotalItemCost, newTotalProfit, orderId]
 			);
 
-			res.status(200).send();
-			return await pool.end();
+			await pool.end();
+			return res.status(200).send();
 		}
 
 		await pool.query(
@@ -1184,8 +1164,8 @@ ordersRouter.put("/:orderId/items", async (req, res, next) => {
 			[newInfo, itemId]
 		);
 
-		res.status(200).send();
-		return await pool.end();
+		await pool.end();
+		return res.status(200).send();
 	} catch (err) {
 		console.log(err);
 	}
@@ -1344,8 +1324,8 @@ ordersRouter.delete("/:orderId/items", async (req, res, next) => {
 			]
 		);
 
-		res.status(204).send();
 		await pool.end();
+		return res.status(204).send();
 	} catch (err) {
 		console.log(err);
 	}

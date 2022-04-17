@@ -1,0 +1,90 @@
+.all-order {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	border: 1px solid hsl(168, 35%, 20%);
+	border-radius: 15px;
+	background-color: white;
+	color: #10171E;
+	text-decoration: none;
+	margin-bottom: 0.5rem;
+	position: relative;
+	overflow: hidden;
+	transition: max-height 0.5s ease;
+	max-height: 93px;
+	height: 93px;
+
+	.detailed-order {
+		padding: 0.5rem;
+		display: block;
+		opacity: 0;
+		transition: opacity 0.3s ease;
+		width: 100%;
+
+		.order-profit-breakdown {
+			position: relative;
+
+			h6 {
+				margin-left: 0.5rem;
+				margin-bottom: 0.5rem;
+				font-size: 0.65rem;
+			}
+
+			h4 {
+				margin-bottom: 1rem;
+				text-align: center;
+			}
+
+			.show-details {
+				cursor: pointer;
+				text-align: center;
+				font-size: 0.7rem;
+				text-decoration: underline;
+				text-underline-offset: 4px;
+				margin-top: 0.5rem;
+				pointer-events: auto;
+			}
+		}
+
+		span {
+			font-weight: 400;
+		}
+
+		.order-details-cross-icon {
+			font-size: 1.5rem;
+			color: hsl(168, 35%, 20%);
+			cursor: pointer;
+			position: absolute;
+			top: 10px;
+			right: 10px;
+			pointer-events: auto;
+		}
+
+		.order-details-cross-icon:hover {
+			color: hsl(41, 56%, 64%);
+		}
+
+		.toggle-edit-text {
+			cursor: pointer;
+			text-align: center;
+			font-size: 0.7rem;
+			text-decoration: underline;
+			text-underline-offset: 4px;
+			pointer-events: auto;
+			position: absolute;
+			top: 5px;
+			left: 0.5rem;
+			color: hsl(175, 23%, 32%);
+		}
+
+		.edit-pen-icon {
+			margin-left: 1rem;
+			cursor: pointer;
+			padding: 2px;
+		}
+	}
+
+	.lds-roller {
+		display: none;
+	}
+}

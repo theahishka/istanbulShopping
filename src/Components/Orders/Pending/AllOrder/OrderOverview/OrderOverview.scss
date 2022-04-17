@@ -1,0 +1,43 @@
+.order-overview {
+	position: absolute;
+	width: 100%;
+	padding: 0.5rem;
+	cursor: pointer;
+	opacity: 1;
+	transition: opacity 0.3s ease;
+	border-radius: 15px;
+
+	.order-number,
+	.customer {
+		margin-bottom: 0.5rem;
+	}
+
+	p {
+		font-size: 0.8rem;
+		font-weight: bold;
+		position: absolute;
+		bottom: 0.5rem;
+		right: 0.5rem;
+	}
+
+	span {
+		font-weight: 400;
+	}
+
+	.order-indicator {
+		width: 10px;
+		height: 10px;
+		border-radius: 50%;
+		position: absolute;
+		top: 0.5rem;
+		right: 0.5rem;
+	}
+
+	:nth-child(n) {
+		pointer-events: none;
+	}
+}
+
+.order-overview:hover {
+	background-color: #ececec;
+}

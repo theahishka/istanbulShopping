@@ -1,5 +1,5 @@
 const istanbul = {};
-const baseUrl = "http://localhost:4000/api";
+const baseUrl = "https://istanbulshopping.herokuapp.com/api";
 
 istanbul.getAllOrders = () => {
 	const url = `${baseUrl}/orders`;

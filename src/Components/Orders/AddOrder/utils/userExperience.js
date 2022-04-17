@@ -523,42 +523,40 @@ userExperience.createNewBox = (
 
 	setLoading(true);
 
-	setTimeout(() => {
-		istanbul.postNewBox().then((response) => {
-			setLoading(false);
-			setNotifyCreation(true);
+	istanbul.postNewBox().then((response) => {
+		setLoading(false);
+		setNotifyCreation(true);
 
-			const newlyCreatedBoxIdElement = document.querySelector(
-				".newly-created-box-id"
-			);
-			newlyCreatedBoxIdElement.innerText = response;
+		const newlyCreatedBoxIdElement = document.querySelector(
+			".newly-created-box-id"
+		);
+		newlyCreatedBoxIdElement.innerText = response;
 
-			setTimeout(() => {
-				setNotifyCreation(false);
-				quickNewBoxInfoWrapper.style.filter = "blur(0)";
-				quickNewBoxInfoWrapper.style.pointerEvents = "";
+		setTimeout(() => {
+			setNotifyCreation(false);
+			quickNewBoxInfoWrapper.style.filter = "blur(0)";
+			quickNewBoxInfoWrapper.style.pointerEvents = "";
 
-				setBoxChoice(response);
-				const boxChoiceInput = document.querySelector(".box-choice");
-				boxChoiceInput.style.outline = "2px solid green";
-				userExperience.closeQuickNewBox();
+			setBoxChoice(response);
+			const boxChoiceInput = document.querySelector(".box-choice");
+			boxChoiceInput.style.outline = "2px solid green";
+			userExperience.closeQuickNewBox();
 
-				setBoxId(response);
+			setBoxId(response);
 
-				if (updater) {
-					setUpdater(false);
-				} else {
-					setUpdater(true);
-				}
+			if (updater) {
+				setUpdater(false);
+			} else {
+				setUpdater(true);
+			}
 
-				if (orderOutletUpdater) {
-					setOrderOutletUpdater(false);
-				} else {
-					setOrderOutletUpdater(true);
-				}
-			}, 2000);
-		});
-	}, 400);
+			if (orderOutletUpdater) {
+				setOrderOutletUpdater(false);
+			} else {
+				setOrderOutletUpdater(true);
+			}
+		}, 2000);
+	});
 };
 
 // Close quick new box
