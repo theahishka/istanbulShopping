@@ -32,6 +32,8 @@ customersRouter.post("/", async (req, res, next) => {
 		const pool = new Pool(connection);
 		await pool.connect();
 
+		const joinedDate = new Date(Date.now());
+
 		const newCustomer = await pool.query(
 			"INSERT INTO customers (full_name, address, phone, comments, date_joined) VALUES ($1, $2, $3, $4, $5) RETURNING *",
 			[
