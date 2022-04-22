@@ -1,13 +1,13 @@
-import { userExperience } from "../utils/userExperience";
+import { addOrderUX } from "../utils/addOrderUX";
 import "./BoxChoice.scss";
 
 function BoxChoice(props) {
 	function openQuickNewBox() {
-		userExperience.openQuickNewBox();
+		addOrderUX.openQuickNewBox();
 	}
 
 	function validateBoxInput(e) {
-		userExperience.validateBoxInput(
+		addOrderUX.validateBoxInput(
 			e,
 			props.boxes,
 			props.setBoxChoice,
@@ -18,7 +18,7 @@ function BoxChoice(props) {
 	return (
 		<div className="input-wrapper">
 			<label htmlFor="box-choice" className="labels">
-				Box #:
+				Box #:<span className="required-input"> *</span>
 			</label>
 			<div className="input-and-add-new-button">
 				<input

@@ -4,11 +4,13 @@ import { BoxChoice } from "./BoxChoice/BoxChoice";
 import { CustomerChoice } from "./CustomerChoice/CustomerChoice";
 import { NewPayments } from "./NewPayments/NewPayments";
 import { NewItems } from "./NewItems/NewItems";
-import { userExperience } from "./utils/userExperience";
+import { addOrderUX } from "./utils/addOrderUX";
 import { QuickNewCustomer } from "./QuickNewCustomer/QuickNewCustomer";
 import { QuickNewBox } from "./QuickNewBox/QuickNewBox";
 import { istanbul } from "../../../utils/istanbul";
 import { LoadingSpinner } from "../../utils/LoadingSpinner";
+
+import { createNewOrder as createNewOrderFile } from "./createNewOrder";
 
 function AddOrder(props) {
 	const [loading, setLoading] = useState(false);
@@ -41,7 +43,9 @@ function AddOrder(props) {
 		istanbul.getAllBoxes().then((response) => {
 			return setBoxes(response);
 		});
+	}, [updater]);
 
+	useEffect(() => {
 		const letters = Array.from(
 			document.querySelectorAll(".element-with-ripple")
 		);
@@ -108,22 +112,22 @@ function AddOrder(props) {
 				});
 			});
 		};
-	}, [updater]);
+	}, []);
 
 	function addAdditionalItem() {
-		userExperience.addAdditionalItem(setItems);
+		addOrderUX.addAdditionalItem(setItems);
 	}
 
 	function addAdditionalPayment() {
-		userExperience.addAdditionalPayment(setPayments);
+		addOrderUX.addAdditionalPayment(setPayments);
 	}
 
 	function openNewOrderForm() {
-		userExperience.openNewOrderForm();
+		addOrderUX.openNewOrderForm();
 	}
 
 	function createNewOrder(e) {
-		userExperience.createNewOrder(
+		createNewOrderFile.createNewOrder(
 			e,
 			items,
 			payments,
@@ -148,7 +152,7 @@ function AddOrder(props) {
 	}
 
 	function closeNewOrderForm() {
-		userExperience.closeNewOrderForm();
+		addOrderUX.closeNewOrderForm();
 	}
 
 	return (
@@ -160,7 +164,7 @@ function AddOrder(props) {
 				ADD ORDER
 				<div className="ripple"></div>
 			</div>
-			<section className="add-order-form-wrapper">
+			<section className="add-order-form-wrapper" visible="true">
 				<h3>New Order</h3>
 				<form className="add-order-form">
 					<CustomerChoice
@@ -183,7 +187,11 @@ function AddOrder(props) {
 						addAdditionalPayment={addAdditionalPayment}
 						setPayments={setPayments}
 					/>
-					<NewItems items={items} setItems={setItems} addAdditionalItem={addAdditionalItem}/>
+					<NewItems
+						items={items}
+						setItems={setItems}
+						addAdditionalItem={addAdditionalItem}
+					/>
 					<button
 						className="element-with-ripple create-order-button"
 						type="submit"

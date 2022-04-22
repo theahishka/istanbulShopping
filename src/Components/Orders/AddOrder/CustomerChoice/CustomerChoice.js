@@ -1,13 +1,13 @@
-import { userExperience } from "../utils/userExperience";
+import { addOrderUX } from "../utils/addOrderUX";
 import "./CustomerChoice.scss";
 
 function CustomerChoice(props) {
 	function openQuickNewCustomer() {
-		userExperience.openQuickNewCustomer();
+		addOrderUX.openQuickNewCustomer();
 	}
 
 	function validateCustomerInput(e) {
-		userExperience.validateCustomerInput(
+		addOrderUX.validateCustomerInput(
 			e,
 			props.customers,
 			props.setCustomerChoice,
@@ -19,7 +19,7 @@ function CustomerChoice(props) {
 	return (
 		<div className="input-wrapper">
 			<label htmlFor="customer-choice" className="labels">
-				Customer:
+				Customer:<span className="required-input"> *</span>
 			</label>
 			<div className="input-and-add-new-button">
 				<input

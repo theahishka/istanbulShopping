@@ -1,8 +1,9 @@
 import "./QuickNewCustomer.scss";
-import { userExperience } from "../utils/userExperience";
+import { addOrderUX } from "../utils/addOrderUX";
 import { useState, useEffect } from "react";
 import { istanbul } from "../../../../utils/istanbul";
 import { LoadingSpinner } from "../../../utils/LoadingSpinner";
+import { createNewCustomer as createNewCustomerFile } from "./createNewCustomer";
 
 function QuickNewCustomer(props) {
 	const [loading, setLoading] = useState(false);
@@ -85,17 +86,11 @@ function QuickNewCustomer(props) {
 	});
 
 	function updateNewCustomerDetails(e) {
-		let property = e.target.attributes[0].textContent;
-		let value = e.target.value;
-		setNewCustomer((prev) => {
-			let newCustomerInfo = { ...prev };
-			newCustomerInfo[property] = value;
-			return newCustomerInfo;
-		});
+		createNewCustomerFile.updateNewCustomerDetails(e, setNewCustomer);
 	}
 
 	function createNewCustomer(e) {
-		userExperience.createNewCustomer(
+		createNewCustomerFile.createNewCustomer(
 			e,
 			newCustomer,
 			setNewCustomer,
@@ -105,16 +100,17 @@ function QuickNewCustomer(props) {
 			props.setCustomerChoice,
 			istanbul,
 			props.setCustomerId,
-			props.setCustomerFullName
+			props.setCustomerFullName,
+			setNotifyCreation,
 		);
 	}
 
 	function closeQuickNewCustomer() {
-		userExperience.closeQuickNewCustomer();
+		addOrderUX.closeQuickNewCustomer();
 	}
 
 	return (
-		<section className="quick-new-customer-wrapper">
+		<section className="quick-new-customer-wrapper" visible="true">
 			<form className="quick-new-customer-form">
 				<h3>Create New Customer</h3>
 				<div className="quick-customer-input-wrapper">
@@ -122,7 +118,7 @@ function QuickNewCustomer(props) {
 						htmlFor="fullName"
 						className="quick-new-customer-label"
 					>
-						Full Name:
+						Full Name:<span className="required-input"> *</span>
 					</label>
 					<input
 						name="fullName"
@@ -140,7 +136,7 @@ function QuickNewCustomer(props) {
 						htmlFor="address"
 						className="quick-new-customer-label"
 					>
-						Address:
+						Address:<span className="required-input"> *</span>
 					</label>
 					<input
 						name="address"
@@ -155,7 +151,7 @@ function QuickNewCustomer(props) {
 				</div>
 				<div className="quick-customer-input-wrapper">
 					<label htmlFor="phone" className="quick-new-customer-label">
-						Phone Number:
+						Phone Number:<span className="required-input"> *</span>
 					</label>
 					<input
 						name="phone"
@@ -200,16 +196,16 @@ function QuickNewCustomer(props) {
 					<LoadingSpinner />
 				</div>
 			)}
-			<i
-				className="far fa-times-circle"
-				onClick={closeQuickNewCustomer}
-			></i>
 			{!notifyCreation ? null : (
 				<div className="quick-new-customer-notify-creation">
 					<p>New Customer Id:</p>{" "}
 					<p className="newly-created-customer-id"></p>
 				</div>
 			)}
+			<i
+				className="far fa-times-circle"
+				onClick={closeQuickNewCustomer}
+			></i>
 		</section>
 	);
 }

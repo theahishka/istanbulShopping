@@ -1,8 +1,9 @@
 import "./QuickNewBox.scss";
-import { userExperience } from "../utils/userExperience";
+import { addOrderUX } from "../utils/addOrderUX";
 import { LoadingSpinner } from "../../../utils/LoadingSpinner";
 import { useState, useEffect } from "react";
 import { istanbul } from "../../../../utils/istanbul";
+import { generalUX } from "../../../utils/generalUX";
 
 function QuickNewBox(props) {
 	const [loading, setLoading] = useState(false);
@@ -78,7 +79,7 @@ function QuickNewBox(props) {
 	});
 
 	function createNewBox(e) {
-		userExperience.createNewBox(
+		generalUX.createNewBox(
 			e,
 			setLoading,
 			istanbul,
@@ -93,7 +94,7 @@ function QuickNewBox(props) {
 	}
 
 	function closeQuickNewBox() {
-		userExperience.closeQuickNewBox();
+		addOrderUX.closeQuickNewBox();
 	}
 
 	return (

@@ -9,6 +9,10 @@ function NewPayment(props) {
 			newPayments[props.index][property] = value;
 			return newPayments;
 		});
+		const inputField = document.querySelector(
+			`.new-payment-${property}-input-${props.index + 1}`
+		);
+		inputField.style.boxShadow = "";
 	}
 
 	function deleteAdditionalPayment(e) {
@@ -20,18 +24,20 @@ function NewPayment(props) {
 	}
 
 	return (
-		<div className="new-payment">
+		<div className={`new-payment new-payment-${props.index + 1}`}>
 			<h4>Payment {props.index + 1}</h4>
 			<div className="payment-input-wrapper">
 				<label className="labels" htmlFor="amount">
-					Amount ($):
+					Amount ($):<span className="required-input"> *</span>
 				</label>
 				<input
-					className="inputs"
+					className={`inputs new-payment-amount-input-${
+						props.index + 1
+					}`}
 					name="amount"
 					id="amount"
 					placeholder="300"
-					type="text"
+					type="number"
 					required
 					onChange={changePaymentInfoState}
 					value={props.payments.amount}
@@ -39,10 +45,12 @@ function NewPayment(props) {
 			</div>
 			<div className="payment-input-wrapper">
 				<label className="labels" htmlFor="date">
-					Date:
+					Date:<span className="required-input"> *</span>
 				</label>
 				<input
-					className="inputs"
+					className={`inputs new-payment-date-input-${
+						props.index + 1
+					}`}
 					name="date"
 					id="date"
 					type="date"

@@ -9,6 +9,10 @@ function NewItem(props) {
 			newItems[props.index][property] = value;
 			return newItems;
 		});
+		const inputField = document.querySelector(
+			`.new-item-${property}-input-${props.index + 1}`
+		);
+		inputField.style.boxShadow = "";
 	}
 
 	function deleteAdditionalItem(e) {
@@ -28,10 +32,10 @@ function NewItem(props) {
 			</h4>
 			<div className="item-input-wrapper">
 				<label className="labels" htmlFor="brand">
-					Brand:
+					Brand:<span className="required-input"> *</span>
 				</label>
 				<input
-					className="inputs"
+					className={`inputs new-item-brand-input-${props.index + 1}`}
 					name="brand"
 					id="brand"
 					placeholder="Louis Vuitton"
@@ -43,10 +47,10 @@ function NewItem(props) {
 			</div>
 			<div className="item-input-wrapper">
 				<label className="labels" htmlFor="name">
-					Name:
+					Name:<span className="required-input"> *</span>
 				</label>
 				<input
-					className="inputs"
+					className={`inputs new-item-name-input-${props.index + 1}`}
 					name="name"
 					id="name"
 					placeholder="Long Sleeve Shirt"
@@ -58,10 +62,10 @@ function NewItem(props) {
 			</div>
 			<div className="item-input-wrapper">
 				<label className="labels" htmlFor="type">
-					Type:
+					Type:<span className="required-input"> *</span>
 				</label>
 				<input
-					className="inputs"
+					className={`inputs new-item-type-input-${props.index + 1}`}
 					name="type"
 					id="type"
 					placeholder="Shirt"
@@ -101,10 +105,12 @@ function NewItem(props) {
 			</div>
 			<div className="item-input-wrapper">
 				<label className="labels" htmlFor="sellingPrice">
-					Selling ($):
+					Selling ($):<span className="required-input"> *</span>
 				</label>
 				<input
-					className="inputs"
+					className={`inputs new-item-sellingPrice-input-${
+						props.index + 1
+					}`}
 					name="sellingPrice"
 					id="sellingPrice"
 					placeholder="100"
@@ -116,10 +122,12 @@ function NewItem(props) {
 			</div>
 			<div className="item-input-wrapper">
 				<label className="labels" htmlFor="buyingPrice">
-					Buying ($):
+					Buying ($):<span className="required-input"> *</span>
 				</label>
 				<input
-					className="inputs"
+					className={`inputs new-item-buyingPrice-input-${
+						props.index + 1
+					}`}
 					name="buyingPrice"
 					id="buyingPrice"
 					placeholder="80"

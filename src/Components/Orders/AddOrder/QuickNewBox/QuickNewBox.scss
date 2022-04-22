@@ -60,10 +60,10 @@
 		}
 		.start {
 			transform: scale(0.2);
+			transition: transform 1400ms, opacity 1400ms;
 		}
 		.active {
 			transform: scale(2);
-			transition: transform 1400ms, opacity 1400ms;
 			opacity: 0.4;
 		}
 	}

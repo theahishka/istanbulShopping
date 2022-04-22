@@ -27,10 +27,10 @@
 		}
 		.start {
 			transform: scale(0.2);
+			transition: transform 1400ms, opacity 1400ms;
 		}
 		.active {
 			transform: scale(2);
-			transition: transform 1400ms, opacity 1400ms;
 			opacity: 0.4;
 		}
 	}
@@ -109,10 +109,10 @@
 			}
 			.start {
 				transform: scale(0.2);
+				transition: transform 1400ms, opacity 1400ms;
 			}
 			.active {
 				transform: scale(2);
-				transition: transform 1400ms, opacity 1400ms;
 				opacity: 0.4;
 			}
 		}
@@ -159,5 +159,10 @@
 			font-size: 2rem;
 			color: hsl(168, 35%, 20%);
 		}
+	}
+
+	.required-input {
+		display: inline;
+		color: red;
 	}
 }
