@@ -8,6 +8,7 @@ import { updateBoxNumber } from "./updateBoxNumber";
 import { updateDeliveredDate as updateDeliveredDateFile } from "./updateDeliveredDate";
 import { updatePayments as updatePaymentsFile } from "./updatePayments";
 import { helperFunctions } from "./helperFunctions";
+import { generalUX } from "../../../../utils/generalUX";
 
 function OrderInfo(props) {
 	// Edit mode state
@@ -113,6 +114,10 @@ function OrderInfo(props) {
 		);
 	}
 
+	function endBoxIdEditing() {
+		setEditBox(false);
+	}
+
 	// Code for editing delivery date part 2
 	function startDeliveredDateEditing(e) {
 		updateDeliveredDateFile.startDeliveredDateEditing(
@@ -148,6 +153,10 @@ function OrderInfo(props) {
 		);
 	}
 
+	function endDeliveredDateEditing() {
+		setEditDeliveredDate(false);
+	}
+
 	// Code for editing payments part 2
 	function startPaymentEditing(e) {
 		updatePaymentsFile.startPaymentEditing(
@@ -176,6 +185,15 @@ function OrderInfo(props) {
 		);
 	}
 
+	function endPaymentsEditing(e) {
+		let index = Number(e.target.attributes.index.value);
+		setEditPayments((prev) => {
+			let stateObject = { ...prev };
+			stateObject[`payment${index + 1}`] = false;
+			return stateObject;
+		});
+	}
+
 	function startNewPaymentEditing(e) {
 		updatePaymentsFile.startNewPaymentEditing(
 			e,
@@ -187,6 +205,10 @@ function OrderInfo(props) {
 
 	function validateUpdatedNewPayment(e) {
 		updatePaymentsFile.validateUpdatedNewPayment(e, setUpdatedNewPayment);
+	}
+
+	function endNewPaymentEditing() {
+		setEditNewPayment(false);
 	}
 
 	function createNewPayment(e) {
@@ -231,12 +253,7 @@ function OrderInfo(props) {
 
 	function formatDate(date) {
 		if (date) {
-			let splittedDate = date.split("");
-			let formattedDate = [];
-			for (let i = 0; i < 10; i++) {
-				formattedDate.push(splittedDate[i]);
-			}
-			return formattedDate.join("");
+			return generalUX.formatDate(date);
 		}
 	}
 
@@ -245,7 +262,7 @@ function OrderInfo(props) {
 		<div className="order-information order-section">
 			<h4>Order Information</h4>
 			<h5>
-				Order #: <span>{props.orderInfo.order_id}</span>
+				Order #:<span>{props.orderInfo.order_id}</span>
 			</h5>
 			<BoxNumber
 				editMode={editMode}
@@ -257,12 +274,13 @@ function OrderInfo(props) {
 				allBoxes={allBoxes}
 				updateBoxId={updateBoxId}
 				allOrderIndex={props.allOrderIndex}
+				endBoxIdEditing={endBoxIdEditing}
 			/>
 			<h5>
-				Number of Items: <span>{props.orderInfo.number_of_items}</span>
+				Number of Items:<span>{props.orderInfo.number_of_items}</span>
 			</h5>
 			<h5>
-				Created Date:{" "}
+				Created Date:
 				<span>
 					{formatDate(
 						new Date(props.orderInfo.date_created).toLocaleString(
@@ -281,10 +299,13 @@ function OrderInfo(props) {
 				validateUpdatedDeliveredDate={validateUpdatedDeliveredDate}
 				updateDeliveredDate={updateDeliveredDate}
 				allOrderIndex={props.allOrderIndex}
+				endDeliveredDateEditing={endDeliveredDateEditing}
 			/>
 			<h5>
-				Total Amount:{" "}
-				<span>{props.orderInfo.total_amount.toFixed(2)}$</span>
+				Total Amount:
+				<span style={{ color: "green" }}>
+					{props.orderInfo.total_amount.toFixed(2)}$
+				</span>
 			</h5>
 			<Payments
 				paymentsInfo={props.paymentsInfo}
@@ -305,14 +326,16 @@ function OrderInfo(props) {
 				setUpdatedNewPayment={setUpdatedNewPayment}
 				validateUpdatedNewPayment={validateUpdatedNewPayment}
 				createNewPayment={createNewPayment}
+				endPaymentsEditing={endPaymentsEditing}
+				endNewPaymentEditing={endNewPaymentEditing}
 			/>
 			<h5>
-				Outstanding:{" "}
+				Outstanding:
 				<span className="outstanding">
 					{props.orderInfo.outstanding.toFixed(2)}$
 				</span>
 			</h5>
-			{editMode ? (
+			{editMode && (
 				<div
 					className="delete-order-button-wrapper"
 					orderid={props.orderInfo.order_id}
@@ -325,7 +348,7 @@ function OrderInfo(props) {
 						</div>
 					</div>
 				</div>
-			) : null}
+			)}
 			{editMode ? (
 				<p
 					className="toggle-edit-text done-edit-text"

@@ -7,7 +7,7 @@ function Payments(props) {
 				props.paymentsInfo.map((payment, index) => {
 					return (
 						<h6 key={`payment${index + 1}`}>
-							Payment {index + 1}:{" "}
+							Payment {index + 1}:
 							{props.editPayments[`payment${index + 1}`] ? (
 								<input
 									className="edit-payment-input"
@@ -31,18 +31,28 @@ function Payments(props) {
 									)
 								</span>
 							)}
-							{props.editMode ? (
-								<i
-									className="fa-solid fa-pen edit-pen-icon"
-									onClick={props.startPaymentEditing}
-									index={index}
-								></i>
-							) : null}
-							<i
-								className={`fa-solid fa-check save-updated-payment save-updated-payment-${props.allOrderIndex}`}
-								onClick={props.updatePayments}
-								index={index}
-							></i>
+							{props.editMode &&
+								!props.editPayments[`payment${index + 1}`] && (
+									<i
+										className="fa-solid fa-pen edit-pen-icon"
+										onClick={props.startPaymentEditing}
+										index={index}
+									></i>
+								)}
+							{props.editPayments[`payment${index + 1}`] && (
+								<div style={{ display: "inline" }}>
+									<i
+										className={`fa-solid fa-check save-updated-payment save-updated-payment-${props.allOrderIndex}`}
+										onClick={props.updatePayments}
+										index={index}
+									></i>
+									<i
+										className={`fa-solid fa-xmark cancel-save-updated-payment cancel-save-updated-payment-${props.allOrderIndex}`}
+										onClick={props.endPaymentsEditing}
+										index={index}
+									></i>
+								</div>
+							)}
 						</h6>
 					);
 				})
@@ -51,28 +61,36 @@ function Payments(props) {
 			)}
 			{/* New payment */}
 			<h6>
-				{props.editNewPayment ? "New Payment:" : null}
-				{props.editNewPayment ? (
+				{props.editNewPayment && "New Payment:"}
+				{props.editNewPayment && (
 					<input
 						className="new-payment-input"
 						type="number"
 						value={props.updatedNewPayment}
 						onChange={props.validateUpdatedNewPayment}
 					></input>
-				) : null}
-				<i
-					className={`fa-solid fa-check save-new-payment save-new-payment-${props.allOrderIndex}`}
-					onClick={props.createNewPayment}
-				></i>
+				)}
+				{props.editNewPayment && (
+					<div style={{ display: "inline" }}>
+						<i
+							className={`fa-solid fa-check save-new-payment save-new-payment-${props.allOrderIndex}`}
+							onClick={props.createNewPayment}
+						></i>
+						<i
+							className={`fa-solid fa-xmark cancel-save-new-payment cancel-save-new-payment-${props.allOrderIndex}`}
+							onClick={props.endNewPaymentEditing}
+						></i>
+					</div>
+				)}
 			</h6>
-			{props.editMode ? (
+			{props.editMode && !props.editNewPayment && (
 				<div
 					className="add-additional-payment-button"
 					onClick={props.startNewPaymentEditing}
 				>
 					New Payment
 				</div>
-			) : null}
+			)}
 		</div>
 	);
 }

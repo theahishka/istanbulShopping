@@ -12,7 +12,10 @@ function NewItem(props) {
 		const inputField = document.querySelector(
 			`.new-item-${property}-input-${props.index + 1}`
 		);
-		inputField.style.boxShadow = "";
+
+		if (inputField) {
+			inputField.style.boxShadow = "";
+		}
 	}
 
 	function deleteAdditionalItem(e) {

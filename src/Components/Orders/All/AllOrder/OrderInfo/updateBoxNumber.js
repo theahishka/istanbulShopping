@@ -9,12 +9,7 @@ updateBoxNumber.startBoxIdEditing = (
 	index
 ) => {
 	setEditBox(true);
-	e.target.style.display = "none";
 
-	const saveUpdatedBoxId = document.querySelector(
-		`.save-updated-box-id-${index}`
-	);
-	saveUpdatedBoxId.style.display = "inline-block";
 	setUpdatedBoxId(currentBoxId);
 };
 
@@ -30,10 +25,10 @@ updateBoxNumber.validateUpdatedBoxId = (
 	const editBoxInput = document.querySelector(`.edit-box-input-${index}`);
 	for (let i = 0; i < allBoxes.length; i++) {
 		if (allBoxes[i].box_id === value) {
-			editBoxInput.style.outline = "2px solid green";
+			editBoxInput.style.boxShadow = "0px 0px 0px 2px green";
 			break;
 		} else {
-			editBoxInput.style.outline = "2px solid red";
+			editBoxInput.style.boxShadow = "0px 0px 0px 2px red";
 		}
 	}
 };
@@ -58,7 +53,7 @@ updateBoxNumber.updateBoxId = (
 	const editBoxInput = document.querySelector(`.edit-box-input-${index}`);
 	for (let i = 0; i < allBoxes.length; i++) {
 		if (updatedBoxId === allBoxes[i].box_id) {
-			editBoxInput.style.outline = "2px solid green";
+			editBoxInput.style.boxShadow = "0px 0px 0px 2px green";
 			istanbul
 				.putBoxInOrder(orderId, updatedBoxId, currentBoxId, customerId)
 				.then(() => {
@@ -75,7 +70,7 @@ updateBoxNumber.updateBoxId = (
 				});
 			break;
 		} else {
-			editBoxInput.style.outline = "2px solid red";
+			editBoxInput.style.boxShadow = "0px 0px 0px 2px red";
 		}
 	}
 };

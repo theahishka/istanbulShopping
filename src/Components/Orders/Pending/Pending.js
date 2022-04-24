@@ -1,9 +1,8 @@
 import "./Pending.scss";
 import { useEffect, useState } from "react";
 import { istanbul } from "../../../utils/istanbul";
-import { AllOrder } from "./AllOrder/AllOrder";
+import { AllOrder } from "../../Orders/All/AllOrder/AllOrder";
 import { LoadingSpinner } from "../../utils/LoadingSpinner";
-
 
 function Pending(props) {
 	useEffect(() => {

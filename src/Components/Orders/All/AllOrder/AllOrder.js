@@ -4,7 +4,7 @@ import { CustomerInfo } from "./CustomerInfo/CustomerInfo";
 import { OrderInfo } from "./OrderInfo/OrderInfo";
 import { Totals } from "./Totals/Totals";
 import { OrderOverview } from "./OrderOverview/OrderOverview";
-import { userExperience } from "./utils/userExperience";
+import { allOrderUX } from "./utils/allOrderUX";
 import { istanbul } from "../../../../utils/istanbul";
 import { LoadingSpinner } from "../../../utils/LoadingSpinner";
 import { Items } from "./Items/Items";
@@ -15,22 +15,22 @@ function AllOrder(props) {
 	const [detailedProfitBreakdownOpened, setDetailedProfitBreakdownOpened] =
 		useState(false);
 
+	// Dynamic calculation of max height for smoother closing and opening animation of a single order
+	let calculatedMaxHeight =
+		550 * props.orderInfo.number_of_items +
+		24 * props.orderInfo.number_of_payments +
+		1000;
+
 	const toggleDetailedProfitBreakdown = (e) => {
-		userExperience.toggleDetailedProfitBreakdown(
+		allOrderUX.toggleDetailedProfitBreakdown(
 			e,
 			detailedProfitBreakdownOpened,
 			setDetailedProfitBreakdownOpened
 		);
 	};
 
-	// Dynamic calculation of max height for smoother closing and opening animation of a single order
-	let calculatedMaxHeight =
-		550 * props.orderInfo.number_of_items +
-		24 * props.orderInfo.number_of_payments +
-		350;
-
 	const closeOrderDetails = (e) => {
-		userExperience.closeOrderDetails(
+		allOrderUX.closeOrderDetails(
 			e,
 			setDetailedProfitBreakdownOpened,
 			setOrderDetails
@@ -38,7 +38,7 @@ function AllOrder(props) {
 	};
 
 	const openOrderDetails = (e) => {
-		userExperience.openOrderDetails(
+		allOrderUX.openOrderDetails(
 			e,
 			calculatedMaxHeight,
 			props.orderInfo.order_id,

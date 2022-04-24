@@ -54,19 +54,19 @@ function Totals(props) {
 		<div className="totals-wrapper">
 			<div className="totals">
 				<h5>
-					Total Revenue:{" "}
+					Total Revenue:
 					<span className="total-revenue">
 						{props.orderInfo.total_revenue.toFixed(2)}$
 					</span>
 				</h5>
 				<h5>
-					Total Costs:{" "}
+					Total Costs:
 					<span className="total-cost">
 						{props.orderInfo.total_costs.toFixed(2)}$
 					</span>
 				</h5>
 				<h6>
-					Total Item:{" "}
+					Total Item:
 					<span>{props.orderInfo.total_item_cost.toFixed(2)}$</span>
 				</h6>
 				<TotalDelivery
@@ -78,13 +78,14 @@ function Totals(props) {
 					startTotalDeliveryEditing={startTotalDeliveryEditing}
 					validateUpdatedTotalDelivery={validateUpdatedTotalDelivery}
 					updateTotalDelivery={updateTotalDelivery}
+					endTotalDeliveryEditing={endTotalDeliveryEditing}
 				/>
 				<h6>
-					Total Airway:{" "}
+					Total Airway:
 					<span>{props.orderInfo.total_airway_cost.toFixed(2)}$</span>
 				</h6>
 				<h5>
-					Total Profit:{" "}
+					Total Profit:
 					<span className="total-profit">
 						{props.orderInfo.total_profit.toFixed(2)}$
 					</span>

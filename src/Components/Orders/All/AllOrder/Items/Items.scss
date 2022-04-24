@@ -2,6 +2,12 @@
 	overflow: hidden;
 	transition: max-height 0.5s ease;
 	position: relative;
+	
+	.required-input {
+		display: inline;
+		color: red;
+		
+	}
 
 	.item {
 		padding: 0.5rem;

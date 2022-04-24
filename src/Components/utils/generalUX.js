@@ -9,6 +9,16 @@ generalUX.changeBooleanState = (outletUpdater, setOutletUpdater) => {
 	}
 };
 
+// Format date
+generalUX.formatDate = (date) => {
+	let splittedDate = date.split("");
+	let formattedDate = [];
+	for (let i = 0; i < 10; i++) {
+		formattedDate.push(splittedDate[i]);
+	}
+	return formattedDate.join("");
+};
+
 // Opening element by changing display to block then changing opacity to 1
 generalUX.openElement = (element, after, before) => {
 	const observer = new MutationObserver(function (mutation) {

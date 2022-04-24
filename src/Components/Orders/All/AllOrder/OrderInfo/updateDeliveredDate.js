@@ -10,12 +10,6 @@ updateDeliveredDate.startDeliveredDateEditing = (
 	index
 ) => {
 	setEditDeliveredDate(true);
-	e.target.style.display = "none";
-
-	const saveUpdatedDeliveredDate = document.querySelector(
-		`.save-updated-delivered-date-${index}`
-	);
-	saveUpdatedDeliveredDate.style.display = "inline-block";
 
 	let date = new Date(Date.now());
 	let todaysDate = date.toLocaleDateString("fr-CA");

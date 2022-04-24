@@ -1,9 +1,8 @@
 import "./Items.scss";
 import { Item } from "./Item/Item";
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { istanbul } from "../../../../../utils/istanbul";
 import { updateItems as updateItemsFile } from "./updateItems";
-import { createNewItem as createNewItemFile } from "./createNewItem";
 
 function Items(props) {
 	const [editMode, setEditMode] = useState(false);
@@ -28,7 +27,7 @@ function Items(props) {
 				<h4>New Item</h4>
 				<div className="item-input-wrapper">
 					<label className="labels" htmlFor="brand">
-						Brand:
+						Brand:<span className="required-input">*</span>
 					</label>
 					<input
 						className="inputs"
@@ -43,7 +42,7 @@ function Items(props) {
 				</div>
 				<div className="item-input-wrapper">
 					<label className="labels" htmlFor="name">
-						Name:
+						Name:<span className="required-input">*</span>
 					</label>
 					<input
 						className="inputs"
@@ -58,7 +57,7 @@ function Items(props) {
 				</div>
 				<div className="item-input-wrapper">
 					<label className="labels" htmlFor="type">
-						Type:
+						Type:<span className="required-input">*</span>
 					</label>
 					<input
 						className="inputs"
@@ -101,7 +100,7 @@ function Items(props) {
 				</div>
 				<div className="item-input-wrapper">
 					<label className="labels" htmlFor="sellingPrice">
-						Selling ($):
+						Selling ($):<span className="required-input">*</span>
 					</label>
 					<input
 						className="inputs"
@@ -116,7 +115,7 @@ function Items(props) {
 				</div>
 				<div className="item-input-wrapper">
 					<label className="labels" htmlFor="buyingPrice">
-						Buying ($):
+						Buying ($):<span className="required-input">*</span>
 					</label>
 					<input
 						className="inputs"
@@ -236,20 +235,6 @@ function Items(props) {
 			typeInputElement.style.outline = "2px solid red";
 		}
 
-		if (!color) {
-			const colorInputElement = document.querySelector(
-				`.new-item-in-order-form-${props.allOrderIndex}`
-			).children[0].children[4].children[1];
-			colorInputElement.style.outline = "2px solid red";
-		}
-
-		if (!size) {
-			const sizeInputElement = document.querySelector(
-				`.new-item-in-order-form-${props.allOrderIndex}`
-			).children[0].children[5].children[1];
-			sizeInputElement.style.outline = "2px solid red";
-		}
-
 		if (!sellingPrice) {
 			const sellingPriceInputElement = document.querySelector(
 				`.new-item-in-order-form-${props.allOrderIndex}`
@@ -264,15 +249,7 @@ function Items(props) {
 			buyingPriceInputElement.style.outline = "2px solid red";
 		}
 
-		if (
-			!brand ||
-			!name ||
-			!type ||
-			!color ||
-			!size ||
-			!buyingPrice ||
-			!sellingPrice
-		) {
+		if (!brand || !name || !type || !buyingPrice || !sellingPrice) {
 			return;
 		}
 
@@ -323,6 +300,16 @@ function Items(props) {
 						newState[`item${index + 1}`] = false;
 					});
 					return newState;
+				});
+
+				setUpdatedNewItem({
+					brand: "",
+					name: "",
+					type: "",
+					color: "",
+					size: "",
+					sellingPrice: "",
+					buyingPrice: "",
 				});
 
 				if (props.orderOutletUpdater) {
@@ -399,6 +386,17 @@ function Items(props) {
 		);
 	}
 
+	function endItemEditing(e) {
+		let index = Number(e.target.attributes.index.value);
+		let property =
+			e.target.parentElement.previousElementSibling.attributes.name.value;
+		setEditItems((prev) => {
+			let stateObject = { ...prev };
+			stateObject[`item${index + 1}`][property] = false;
+			return stateObject;
+		});
+	}
+
 	// Close items editing mode
 	function endItemsEditing() {
 		updateItemsFile.endItemsEditing(
@@ -439,10 +437,11 @@ function Items(props) {
 						updateItems={updateItems}
 						updatedItems={updatedItems}
 						deleteSingleItem={deleteSingleItem}
+						endItemEditing={endItemEditing}
 					/>
 				);
 			})}
-			{editMode ? editNewItemElement : null}
+			{editMode && editNewItemElement}
 			{editMode ? (
 				<p
 					className="toggle-edit-text done-edit-text"

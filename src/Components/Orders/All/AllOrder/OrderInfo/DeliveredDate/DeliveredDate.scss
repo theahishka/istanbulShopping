@@ -1,10 +1,14 @@
 .edit-delivered-date-input {
-	display: inline-block;
+	display: flex;
+	align-items: center;
+	justify-content: center;
 	width: 130px;
 	text-align: center;
-	height: 1.2rem;
+	height: 1.3rem;
     border: 1px solid hsl(168, 35%, 20%);
 	border-radius: 3px;
+	font-size: 1rem;
+	margin-left: 0.5rem;
 }
 
 .save-updated-delivered-date {
@@ -13,5 +17,13 @@
 	background-color: hsl(168, 35%, 20%);
 	color: white;
 	padding: 3px;
-	display: none;
+}
+
+.cancel-save-updated-delivered-date {
+	margin-left: 1rem;
+	cursor: pointer;
+	background-color: hsl(0, 70%, 48%);
+	color: white;
+	padding: 3px 6px;
+	font-size: 1rem;
 }

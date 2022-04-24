@@ -58,24 +58,6 @@ helperFunctions.endAllEditing = (
 	paymentsInfo,
 	setEditNewPayment
 ) => {
-	const saveUpdatedBoxId = document.querySelector(
-		`.save-updated-box-id-${allOrderIndex}`
-	);
-	saveUpdatedBoxId.style.display = "none";
-	const saveUpdatedDeliveredDate = document.querySelector(
-		`.save-updated-delivered-date-${allOrderIndex}`
-	);
-	saveUpdatedDeliveredDate.style.display = "none";
-	const saveUpdatedPayments = document.querySelectorAll(
-		`.save-updated-payment-${allOrderIndex}`
-	);
-	saveUpdatedPayments.forEach((element) => {
-		element.style.display = "none";
-	});
-	const saveNewPayment = document.querySelector(
-		`.save-new-payment-${allOrderIndex}`
-	);
-	saveNewPayment.style.display = "none";
 	setEditMode(false);
 	setEditBox(false);
 	setEditDeliveredDate(false);

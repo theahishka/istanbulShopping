@@ -8,12 +8,6 @@ updateCustomerNumber.startCustomerIdEditing = (
 	index
 ) => {
 	setEditCustomer(true);
-	e.target.style.display = "none";
-
-	const saveUpdatedCustomerId = document.querySelector(
-		`.save-updated-customer-id-${index}`
-	);
-	saveUpdatedCustomerId.style.display = "inline-block";
 	setUpdatedCustomerId(currentCustomerId);
 };
 
@@ -30,10 +24,10 @@ updateCustomerNumber.validateUpdatedCustomerId = (
 	);
 	for (let i = 0; i < allCustomers.length; i++) {
 		if (allCustomers[i].customer_id === value) {
-			editCustomerInput.style.outline = "2px solid green";
+			editCustomerInput.style.boxShadow = "0px 0px 0px 2px green";
 			break;
 		} else {
-			editCustomerInput.style.outline = "2px solid red";
+			editCustomerInput.style.boxShadow = "0px 0px 0px 2px red";
 		}
 	}
 };
@@ -59,7 +53,7 @@ updateCustomerNumber.updateCustomerId = (
 	);
 	for (let i = 0; i < allCustomers.length; i++) {
 		if (updatedCustomerId === allCustomers[i].customer_id) {
-			editCustomerInput.style.outline = "2px solid green";
+			editCustomerInput.style.boxShadow = "0px 0px 0px 2px green";
 			istanbul
 				.putCustomerInOrder(
 					orderId,
@@ -81,7 +75,7 @@ updateCustomerNumber.updateCustomerId = (
 				});
 			break;
 		} else {
-			editCustomerInput.style.outline = "2px solid red";
+			editCustomerInput.style.boxShadow = "0px 0px 0px 2px red";
 		}
 	}
 };
@@ -91,10 +85,6 @@ updateCustomerNumber.endCustomerIdEditing = (
 	setEditCustomer,
 	index
 ) => {
-	const saveUpdatedCustomerId = document.querySelector(
-		`.save-updated-customer-id-${index}`
-	);
-	saveUpdatedCustomerId.style.display = "none";
 	setEditMode(false);
 	setEditCustomer(false);
 };

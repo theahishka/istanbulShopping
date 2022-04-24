@@ -13,8 +13,6 @@ updateItems.startItemEditing = (
 		] = true;
 		return newState;
 	});
-	e.target.style.display = "none";
-	e.target.nextElementSibling.style.display = "inline-block";
 	setUpdatedItems((prev) => {
 		let newState = {};
 		itemsInfo.forEach((item, index) => {
@@ -35,7 +33,7 @@ updateItems.startItemEditing = (
 
 updateItems.validateUpdatedItem = (e, setUpdatedItems) => {
 	let value = e.target.value;
-	e.target.style.outline = "";
+	e.target.style.boxShadow = "";
 	setUpdatedItems((prev) => {
 		let newState = { ...prev };
 		newState[`item${Number(e.target.attributes.index.value) + 1}`][
@@ -57,7 +55,7 @@ updateItems.updateItems = (
 	endItemsEditing
 ) => {
 	let index = Number(e.target.attributes.index.value);
-	let inputElement = e.target.previousElementSibling.previousElementSibling;
+	let inputElement = e.target.parentElement.previousElementSibling;
 	let type = inputElement.attributes.type.value;
 	let value = inputElement.value;
 	let sqlname = inputElement.attributes.sqlname.value;
@@ -65,9 +63,6 @@ updateItems.updateItems = (
 	let itemId = itemsInfo[index].item_id;
 
 	function endSingleItemInputEditing() {
-		inputElement.style.outline = "";
-		e.target.style.display = "none";
-		e.target.previousElementSibling.style.display = "inline-block";
 		return setEditItems((prev) => {
 			let newState = { ...prev };
 			newState[`item${index + 1}`][name] = false;
@@ -108,7 +103,7 @@ updateItems.updateItems = (
 		}
 		if (name === "brand" || name === "name" || name === "type") {
 			if (value === "") {
-				return (inputElement.style.outline = "2px solid red");
+				return (inputElement.style.boxShadow = "0px 0px 0px 2px red");
 			}
 		}
 		return updateSingleItemInput();
@@ -117,7 +112,7 @@ updateItems.updateItems = (
 			return endSingleItemInputEditing();
 		}
 		if (value === "" || Number(value) === 0) {
-			return (inputElement.style.outline = "2px solid red");
+			return (inputElement.style.boxShadow = "0px 0px 0px 2px red");
 		}
 		return updateSingleItemInput();
 	}
@@ -211,12 +206,6 @@ updateItems.endItemsEditing = (
 			};
 		});
 		return newState;
-	});
-	const saveUpdatedItems = document.querySelectorAll(
-		`.save-updated-item-${allOrderIndex}`
-	);
-	saveUpdatedItems.forEach((element) => {
-		element.style.display = "none";
 	});
 	setUpdatedItems((prev) => {
 		let newState = {};

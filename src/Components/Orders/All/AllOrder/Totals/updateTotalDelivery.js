@@ -8,12 +8,6 @@ updateTotalDelivery.startTotalDeliveryEditing = (
 	orderInfo
 ) => {
 	setEditTotalDelivery(true);
-	e.target.style.display = "none";
-
-	const saveUpdatedTotalDelivery = document.querySelector(
-		`.save-updated-total-delivery-${allOrderIndex}`
-	);
-	saveUpdatedTotalDelivery.style.display = "inline-block";
 	setUpdatedTotalDelivery(Number(orderInfo.total_delivery_cost));
 };
 
@@ -23,7 +17,7 @@ updateTotalDelivery.validateUpdatedTotalDelivery = (
 ) => {
 	let value = e.target.value;
 	setUpdatedTotalDelivery(value);
-	e.target.style.outline = "";
+	e.target.style.boxShadow = "";
 };
 
 updateTotalDelivery.updateTotalDelivery = (
@@ -37,23 +31,23 @@ updateTotalDelivery.updateTotalDelivery = (
 	updatedTotalDelivery
 ) => {
 	const totalDeliveryInputValue = Number(
-		e.target.previousElementSibling.previousElementSibling.value
+		e.target.parentElement.previousElementSibling.value
 	);
 	const totalDeliveryInputElement =
-		e.target.previousElementSibling.previousElementSibling;
+		e.target.parentElement.previousElementSibling;
 	if (totalDeliveryInputValue < 0) {
-		return (totalDeliveryInputElement.style.outline = "2px solid red");
+		return (totalDeliveryInputElement.style.boxShadow = "0px 0px 0px 2px red");
 	}
 
 	if (totalDeliveryInputElement.value === "") {
-		return (totalDeliveryInputElement.style.outline = "2px solid red");
+		return (totalDeliveryInputElement.style.boxShadow = "0px 0px 0px 2px red");
 	}
 
 	if (totalDeliveryInputValue === orderInfo.total_delivery_cost) {
 		return endTotalDeliveryEditing();
 	}
 
-	totalDeliveryInputElement.style.outline = "";
+	totalDeliveryInputElement.style.boxShadow = "";
 
 	istanbul
 		.putTotalDeliveryCostInOrder(
@@ -82,10 +76,6 @@ updateTotalDelivery.endTotalDeliveryEditing = (
 ) => {
 	setEditMode(false);
 	setEditTotalDelivery(false);
-	const saveUpdatedTotalDelivery = document.querySelector(
-		`.save-updated-total-delivery-${allOrderIndex}`
-	);
-	saveUpdatedTotalDelivery.style.display = "none";
 };
 
 export { updateTotalDelivery };

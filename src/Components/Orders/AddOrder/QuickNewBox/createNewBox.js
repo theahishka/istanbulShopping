@@ -1,5 +1,5 @@
 import { generalUX } from "../../../utils/generalUX";
-import { addOrderUX } from "../utils/userExperience";
+import { addOrderUX } from "../utils/addOrderUX";
 
 const createNewBox = {};
 

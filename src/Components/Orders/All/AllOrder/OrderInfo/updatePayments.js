@@ -19,10 +19,6 @@ updatePayments.startPaymentEditing = (
 		stateObject[`payment${index + 1}`].amount = paymentsInfo[index].amount;
 		return stateObject;
 	});
-
-	e.target.style.display = "none";
-	const saveUpdatedPayment = e.target.nextElementSibling;
-	saveUpdatedPayment.style.display = "inline-block";
 };
 
 // Validate updated payment input and update state
@@ -34,7 +30,7 @@ updatePayments.validateUpdatedPayments = (e, setUpdatedPayments) => {
 		stateObject[`payment${index + 1}`].amount = value;
 		return stateObject;
 	});
-	e.target.style.outline = "";
+	e.target.style.boxShadow = "";
 };
 
 // Update payment info in the data base
@@ -49,11 +45,11 @@ updatePayments.updatePayments = (
 	setOrderOutletUpdater,
 	setOrderDetails
 ) => {
-	let inputBox = e.target.previousElementSibling.previousElementSibling;
+	let inputBox = e.target.parentElement.previousElementSibling;
 	let index = Number(e.target.attributes.index.value);
 
 	if (Number(updatedPayments[`payment${index + 1}`].amount) < 0) {
-		return (inputBox.style.outline = "2px solid red");
+		return (inputBox.style.boxShadow = "0px 0px 0px 2px red");
 	}
 
 	if (
@@ -64,7 +60,7 @@ updatePayments.updatePayments = (
 	}
 
 	if (updatedPayments[`payment${index + 1}`].amount === "") {
-		return (inputBox.style.outline = "2px solid red");
+		return (inputBox.style.boxShadow = "0px 0px 0px 2px red");
 	}
 
 	if (Number(updatedPayments[`payment${index + 1}`].amount) === 0) {
@@ -117,21 +113,15 @@ updatePayments.startNewPaymentEditing = (
 	setUpdatedNewPayment
 ) => {
 	setEditNewPayment(true);
-	const saveNewPayment = document.querySelector(
-		`.save-new-payment-${allOrderIndex}`
-	);
-
-	e.target.style.display = "none";
 	setUpdatedNewPayment(0);
 
-	saveNewPayment.style.display = "inline-block";
 };
 
 // Validate updated new payment input
 updatePayments.validateUpdatedNewPayment = (e, setUpdatedNewPayment) => {
 	let value = e.target.value;
 	setUpdatedNewPayment(value);
-	e.target.style.outline = "";
+	e.target.style.boxShadow = "";
 };
 
 // Create new payment in the data base
@@ -147,18 +137,18 @@ updatePayments.createNewPayment = (
 	endAllEditing,
 	orderInfo
 ) => {
-	const newPaymentInput = e.target.previousElementSibling;
+	const newPaymentInput = e.target.parentElement.previousElementSibling;
 
 	if (updatedNewPayment === "") {
-		return (newPaymentInput.style.outline = "2px solid red");
+		return (newPaymentInput.style.boxShadow = "0px 0px 0px 2px red");
 	}
 
 	if (Number(updatedNewPayment) < 0) {
-		return (newPaymentInput.style.outline = "2px solid red");
+		return (newPaymentInput.style.boxShadow = "0px 0px 0px 2px red");
 	}
 
 	if (Number(updatedNewPayment) === 0) {
-		return (newPaymentInput.style.outline = "2px solid red");
+		return (newPaymentInput.style.boxShadow = "0px 0px 0px 2px red");
 	}
 
 	newPaymentInput.style.outline = "";

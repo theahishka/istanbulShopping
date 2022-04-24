@@ -74,18 +74,19 @@ function CustomerInfo(props) {
 				customerInfo={props.customerInfo}
 				allCustomers={allCustomers}
 				allOrderIndex={props.allOrderIndex}
+				endCustomerIdEditing={endCustomerIdEditing}
 			/>
 			<h5>
-				Full Name: <span>{props.customerInfo.full_name}</span>
+				Full Name:<span>{props.customerInfo.full_name}</span>
 			</h5>
 			<h5>
-				Address: <span>{props.customerInfo.address}</span>
+				Address:<span>{props.customerInfo.address}</span>
 			</h5>
 			<h5>
-				Phone Number: <span>{props.customerInfo.phone}</span>
+				Phone Number:<span>{props.customerInfo.phone}</span>
 			</h5>
 			<h5>
-				Comments: <span>{props.customerInfo.comments}</span>
+				Comments:<span>{props.customerInfo.comments}</span>
 			</h5>
 			{editMode ? (
 				<p

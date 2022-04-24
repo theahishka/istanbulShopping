@@ -7,37 +7,45 @@
 	font-size: 10px;
 	margin-left: 0.5rem;
 	margin-bottom: 1rem;
+	font-size: 0.75rem;
 	display: inline-block;
 }
 
 .edit-payment-input,
 .new-payment-input {
 	display: inline-block;
-	width: 80px;
+	width: 100px;
 	text-align: center;
-	height: 1rem;
-	font-size: 10px;
+	height: 1.3rem;
+	font-size: 1rem;
 	border: 1px solid hsl(168, 35%, 20%);
 	border-radius: 3px;
 	margin-left: 0.5rem;
+	-webkit-appearance: none;
 }
 
-.save-updated-payment {
-	margin-left: 1rem;
-	cursor: pointer;
-	background-color: hsl(168, 35%, 20%);
-	color: white;
-	padding: 3px;
-	font-size: 10px;
-	display: none;
+.edit-payment-input:focus,
+.new-payment-input:focus {
+	box-shadow: 0px 0px 0px 2px rgb(103, 103, 248);
+	outline: none;
 }
 
+.save-updated-payment,
 .save-new-payment {
 	margin-left: 1rem;
 	cursor: pointer;
 	background-color: hsl(168, 35%, 20%);
 	color: white;
 	padding: 3px;
-	font-size: 10px;
-	display: none;
+	font-size: 1rem;
+}
+
+.cancel-save-updated-payment,
+.cancel-save-new-payment {
+	margin-left: 1rem;
+	cursor: pointer;
+	background-color: hsl(0, 70%, 48%);
+	color: white;
+	padding: 3px 6px;
+	font-size: 1rem;
 }

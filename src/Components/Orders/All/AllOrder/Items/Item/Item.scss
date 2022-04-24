@@ -1,6 +1,9 @@
 .item {
 	h5 {
 		margin-bottom: 0.5rem;
+		display: flex;
+		align-items: center;
+		font-size: 1rem;
 	}
 
 	.revenue {
@@ -11,6 +14,7 @@
 
 	.costs {
 		h4 {
+			font-size: 1rem;
 			span {
 				color: red;
 			}
@@ -19,21 +23,27 @@
 
 	.edit-item-input {
 		display: inline-block;
-		width: 60%;
+		width: 40%;
 		text-align: center;
-		height: 1.2rem;
-		font-size: 0.8rem;
+		height: 1.3rem;
+		font-size: 1rem;
 		border: 1px solid hsl(168, 35%, 20%);
 		border-radius: 3px;
 		margin-left: 0.5rem;
+		-webkit-appearance: none;
+	}
+
+	.edit-item-input:focus {
+		box-shadow: 0px 0px 0px 2px rgb(103, 103, 248);
+		outline: none;
 	}
 
 	.edit-item-input-revenue {
 		display: inline-block;
-		width: 40%;
+		width: 30%;
 		text-align: center;
-		height: 1.2rem;
-		font-size: 0.8rem;
+		height: 1.3rem;
+		font-size: 1rem;
 		border: 1px solid hsl(168, 35%, 20%);
 		border-radius: 3px;
 		margin-left: 0.5rem;
@@ -43,8 +53,8 @@
 		display: inline-block;
 		width: 40%;
 		text-align: center;
-		height: 1.2rem;
-		font-size: 0.8rem;
+		height: 1.3rem;
+		font-size: 1rem;
 		border: 1px solid hsl(168, 35%, 20%);
 		border-radius: 3px;
 		margin-left: 0.5rem;
@@ -56,8 +66,16 @@
 		background-color: hsl(168, 35%, 20%);
 		color: white;
 		padding: 3px;
-		font-size: 12px;
-		display: none;
+		font-size: 1rem;
+	}
+
+	.cancel-save-updated-item {
+		margin-left: 1rem;
+		cursor: pointer;
+		background-color: hsl(0, 70%, 48%);
+		color: white;
+		padding: 3px 6px;
+		font-size: 1rem;
 	}
 
 	.modification-delete-item {
@@ -102,7 +120,15 @@
 @media only screen and (min-width: 380px) {
 	.item {
 		.edit-item-input {
-			width: 70%;
+			width: 50%;
+		}
+	}
+}
+
+@media only screen and (min-width: 430px) {
+	.item {
+		.edit-item-input {
+			width: 60%;
 		}
 	}
 }

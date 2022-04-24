@@ -3,7 +3,7 @@ import { addOrderUX } from "../utils/addOrderUX";
 import { LoadingSpinner } from "../../../utils/LoadingSpinner";
 import { useState, useEffect } from "react";
 import { istanbul } from "../../../../utils/istanbul";
-import { generalUX } from "../../../utils/generalUX";
+import { createNewBox as createNewBoxFile } from "./createNewBox";
 
 function QuickNewBox(props) {
 	const [loading, setLoading] = useState(false);
@@ -79,7 +79,7 @@ function QuickNewBox(props) {
 	});
 
 	function createNewBox(e) {
-		generalUX.createNewBox(
+		createNewBoxFile.createNewBox(
 			e,
 			setLoading,
 			istanbul,

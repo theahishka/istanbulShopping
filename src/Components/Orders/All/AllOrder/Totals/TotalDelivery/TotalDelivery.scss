@@ -1,12 +1,18 @@
 .edit-total-delivery-input {
 	display: inline-block;
-	width: 80px;
+	width: 100px;
 	text-align: center;
-	height: 1rem;
-	font-size: 10px;
+	height: 1.3rem;
+	font-size: 1rem;
 	border: 1px solid hsl(168, 35%, 20%);
 	border-radius: 3px;
-    margin-left: 0.5rem;
+	margin-left: 0.5rem;
+	-webkit-appearance: none;
+}
+
+.edit-total-delivery-input:focus {
+	box-shadow: 0px 0px 0px 2px rgb(103, 103, 248);
+	outline: none;
 }
 
 .save-updated-total-delivery {
@@ -15,5 +21,13 @@
 	background-color: hsl(168, 35%, 20%);
 	color: white;
 	padding: 3px;
-	display: none;
+}
+
+.cancel-save-updated-total-delivery {
+	margin-left: 1rem;
+	cursor: pointer;
+	background-color: hsl(0, 70%, 48%);
+	color: white;
+	padding: 3px 6px;
+	font-size: 1rem;
 }

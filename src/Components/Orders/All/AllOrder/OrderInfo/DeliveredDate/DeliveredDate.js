@@ -3,7 +3,7 @@ import "./DeliveredDate.scss";
 function DeliveredDate(props) {
 	return (
 		<h5>
-			Delivered Date:{" "}
+			Delivered Date:
 			{props.editDeliveredDate ? (
 				<input
 					className="edit-delivered-date-input"
@@ -22,16 +22,24 @@ function DeliveredDate(props) {
 						  )}
 				</span>
 			)}
-			{props.editMode ? (
+			{props.editMode && !props.editDeliveredDate && (
 				<i
 					className="fa-solid fa-pen edit-pen-icon"
 					onClick={props.startDeliveredDateEditing}
 				></i>
-			) : null}
-			<i
-				className={`fa-solid fa-check save-updated-delivered-date save-updated-delivered-date-${props.allOrderIndex}`}
-				onClick={props.updateDeliveredDate}
-			></i>
+			)}
+			{props.editDeliveredDate && (
+				<div style={{display: "inline"}}>
+					<i
+						className={`fa-solid fa-check save-updated-delivered-date save-updated-delivered-date-${props.allOrderIndex}`}
+						onClick={props.updateDeliveredDate}
+					></i>
+					<i
+						className={`fa-solid fa-xmark cancel-save-updated-delivered-date cancel-save-updated-delivered-date-${props.allOrderIndex}`}
+						onClick={props.endDeliveredDateEditing}
+					></i>
+				</div>
+			)}
 		</h5>
 	);
 }

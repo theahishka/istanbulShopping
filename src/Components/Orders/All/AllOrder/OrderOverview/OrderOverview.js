@@ -1,3 +1,4 @@
+import { generalUX } from "../../../../utils/generalUX";
 import "./OrderOverview.scss";
 
 function OrderOverview(props) {
@@ -10,12 +11,7 @@ function OrderOverview(props) {
 	}
 
 	function formatDate(date) {
-		let splittedDate = date.split("");
-		let formattedDate = [];
-		for (let i = 0; i < 10; i++) {
-			formattedDate.push(splittedDate[i]);
-		}
-		return formattedDate.join("");
+		return generalUX.formatDate(date);
 	}
 
 	return (
