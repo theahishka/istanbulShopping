@@ -76,4 +76,14 @@ generalUX.closeAllOrderDetails = () => {
 	});
 };
 
+generalUX.showLoader = () => {
+	const loadingScreenElement = document.querySelector(".loading-screen");
+	loadingScreenElement.style.display = "flex";
+}
+
+generalUX.hideLoader = () => {
+	const loadingScreenElement = document.querySelector(".loading-screen");
+	loadingScreenElement.style.display = "none";
+}
+
 export { generalUX };

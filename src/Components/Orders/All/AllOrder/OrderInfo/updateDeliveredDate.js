@@ -1,3 +1,5 @@
+import { generalUX } from "../../../../utils/generalUX";
+
 const updateDeliveredDate = {};
 
 // Start delivered date editing
@@ -47,6 +49,7 @@ updateDeliveredDate.updateDeliveredDate = (
 		if (updatedDeliveredDate === dateDelivered) {
 			return endAllEditing();
 		} else {
+			generalUX.showLoader();
 			return istanbul
 				.putDeliveredDateInOrder(
 					orderId,
@@ -66,6 +69,7 @@ updateDeliveredDate.updateDeliveredDate = (
 					}
 					setOrderDetails(response);
 					endAllEditing();
+					generalUX.hideLoader();
 				});
 		}
 	} else {

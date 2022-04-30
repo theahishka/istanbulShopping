@@ -1,3 +1,5 @@
+import { generalUX } from "../../../../utils/generalUX";
+
 const updatePayments = {};
 
 // Start payment editing
@@ -64,6 +66,7 @@ updatePayments.updatePayments = (
 	}
 
 	if (Number(updatedPayments[`payment${index + 1}`].amount) === 0) {
+		generalUX.showLoader();
 		return istanbul
 			.deletePaymentInOrder(
 				orderInfo.order_id,
@@ -80,11 +83,13 @@ updatePayments.updatePayments = (
 				}
 				setOrderDetails(response);
 				endAllEditing();
+				generalUX.hideLoader();
 			});
 	}
 
 	inputBox.style.outline = "";
 
+	generalUX.showLoader();
 	istanbul
 		.putPaymentsInOrder(
 			orderInfo.order_id,
@@ -102,6 +107,7 @@ updatePayments.updatePayments = (
 			}
 			setOrderDetails(response);
 			endAllEditing();
+			generalUX.hideLoader();
 		});
 };
 
@@ -114,7 +120,6 @@ updatePayments.startNewPaymentEditing = (
 ) => {
 	setEditNewPayment(true);
 	setUpdatedNewPayment(0);
-
 };
 
 // Validate updated new payment input
@@ -153,6 +158,7 @@ updatePayments.createNewPayment = (
 
 	newPaymentInput.style.outline = "";
 
+	generalUX.showLoader();
 	istanbul
 		.postNewPayment(orderInfo.order_id, updatedNewPayment)
 		.then(() => {
@@ -173,6 +179,7 @@ updatePayments.createNewPayment = (
 			}
 
 			endAllEditing();
+			generalUX.hideLoader();
 		});
 };
 

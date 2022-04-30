@@ -3,6 +3,7 @@ import { Item } from "./Item/Item";
 import { useState } from "react";
 import { istanbul } from "../../../../../utils/istanbul";
 import { updateItems as updateItemsFile } from "./updateItems";
+import { generalUX } from "../../../../utils/generalUX";
 
 function Items(props) {
 	const [editMode, setEditMode] = useState(false);
@@ -197,7 +198,7 @@ function Items(props) {
 	function validateNewItem(e) {
 		let value = e.target.value;
 		let stateName = e.target.attributes.name.value;
-		e.target.style.outline = "none";
+		e.target.style.boxShadow = "";
 		setUpdatedNewItem((prev) => {
 			let newState = { ...prev };
 			newState[stateName] = value;
@@ -219,34 +220,34 @@ function Items(props) {
 			const brandInputElement = document.querySelector(
 				`.new-item-in-order-form-${props.allOrderIndex}`
 			).children[0].children[1].children[1];
-			brandInputElement.style.outline = "2px solid red";
+			brandInputElement.style.boxShadow = "0px 0px 0px 2px red";
 		}
 		if (!name) {
 			const nameInputElement = document.querySelector(
 				`.new-item-in-order-form-${props.allOrderIndex}`
 			).children[0].children[2].children[1];
-			nameInputElement.style.outline = "2px solid red";
+			nameInputElement.style.boxShadow = "0px 0px 0px 2px red";
 		}
 
 		if (!type) {
 			const typeInputElement = document.querySelector(
 				`.new-item-in-order-form-${props.allOrderIndex}`
 			).children[0].children[3].children[1];
-			typeInputElement.style.outline = "2px solid red";
+			typeInputElement.style.boxShadow = "0px 0px 0px 2px red";
 		}
 
 		if (!sellingPrice) {
 			const sellingPriceInputElement = document.querySelector(
 				`.new-item-in-order-form-${props.allOrderIndex}`
 			).children[0].children[6].children[1];
-			sellingPriceInputElement.style.outline = "2px solid red";
+			sellingPriceInputElement.style.boxShadow = "0px 0px 0px 2px red";
 		}
 
 		if (!buyingPrice) {
 			const buyingPriceInputElement = document.querySelector(
 				`.new-item-in-order-form-${props.allOrderIndex}`
 			).children[0].children[7].children[1];
-			buyingPriceInputElement.style.outline = "2px solid red";
+			buyingPriceInputElement.style.boxShadow = "0px 0px 0px 2px red";
 		}
 
 		if (!brand || !name || !type || !buyingPrice || !sellingPrice) {
@@ -255,6 +256,7 @@ function Items(props) {
 
 		e.preventDefault();
 
+		generalUX.showLoader();
 		return istanbul
 			.postItemInOrder(props.orderInfo.order_id, updatedNewItem)
 			.then(() => {
@@ -332,6 +334,7 @@ function Items(props) {
 				detailedProfitBreakdownElement.style.maxHeight = `${
 					props.calculatedMaxHeight + 500
 				}px`;
+				generalUX.hideLoader();
 			});
 	}
 

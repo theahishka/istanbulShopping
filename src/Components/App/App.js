@@ -10,6 +10,7 @@ import { All } from "../Orders/All/All";
 import { Pending } from "../Orders/Pending/Pending";
 import { Boxes } from "../Orders/Boxes/Boxes";
 import { useState } from "react";
+import { LoadingScreen } from "../utils/LoadingScreen/LoadingScreen";
 
 function App() {
 	const [orderOutletUpdater, setOrderOutletUpdater] = useState(false);
@@ -65,6 +66,7 @@ function App() {
 					<Route path="/customers" element={<Customers />} />
 					<Route path="/driver" element={<Driver />} />
 				</Routes>
+				<LoadingScreen/>
 			</div>
 		</Router>
 	);

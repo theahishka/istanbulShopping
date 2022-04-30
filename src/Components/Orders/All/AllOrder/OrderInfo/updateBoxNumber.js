@@ -1,3 +1,5 @@
+import { generalUX } from "../../../../utils/generalUX";
+
 const updateBoxNumber = {};
 
 // Start box Id editing
@@ -54,6 +56,8 @@ updateBoxNumber.updateBoxId = (
 	for (let i = 0; i < allBoxes.length; i++) {
 		if (updatedBoxId === allBoxes[i].box_id) {
 			editBoxInput.style.boxShadow = "0px 0px 0px 2px green";
+			generalUX.showLoader();
+
 			istanbul
 				.putBoxInOrder(orderId, updatedBoxId, currentBoxId, customerId)
 				.then(() => {
@@ -67,6 +71,7 @@ updateBoxNumber.updateBoxId = (
 					}
 					setOrderDetails(response);
 					endAllEditing();
+					generalUX.hideLoader();
 				});
 			break;
 		} else {

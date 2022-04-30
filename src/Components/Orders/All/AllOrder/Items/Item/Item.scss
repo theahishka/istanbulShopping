@@ -49,6 +49,11 @@
 		margin-left: 0.5rem;
 	}
 
+	.edit-item-input-revenue:focus {
+		box-shadow: 0px 0px 0px 2px rgb(103, 103, 248);
+		outline: none;
+	}
+
 	.edit-item-input-item-cost {
 		display: inline-block;
 		width: 40%;
@@ -58,6 +63,11 @@
 		border: 1px solid hsl(168, 35%, 20%);
 		border-radius: 3px;
 		margin-left: 0.5rem;
+	}
+
+	.edit-item-input-item-cost:focus {
+		box-shadow: 0px 0px 0px 2px rgb(103, 103, 248);
+		outline: none;
 	}
 
 	.save-updated-item {

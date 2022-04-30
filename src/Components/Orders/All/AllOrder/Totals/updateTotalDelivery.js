@@ -1,3 +1,5 @@
+import { generalUX } from "../../../../utils/generalUX";
+
 const updateTotalDelivery = {};
 
 updateTotalDelivery.startTotalDeliveryEditing = (
@@ -49,6 +51,7 @@ updateTotalDelivery.updateTotalDelivery = (
 
 	totalDeliveryInputElement.style.boxShadow = "";
 
+	generalUX.showLoader();
 	istanbul
 		.putTotalDeliveryCostInOrder(
 			orderInfo.order_id,
@@ -66,6 +69,7 @@ updateTotalDelivery.updateTotalDelivery = (
 			}
 			setOrderDetails(response);
 			endTotalDeliveryEditing();
+			generalUX.hideLoader();
 		});
 };
 

@@ -1,3 +1,5 @@
+import { generalUX } from "../../../../utils/generalUX";
+
 const updateItems = {};
 
 updateItems.startItemEditing = (
@@ -71,6 +73,7 @@ updateItems.updateItems = (
 	}
 
 	function updateSingleItemInput() {
+		generalUX.showLoader();
 		istanbul
 			.putItemsInOrder(
 				orderInfo.order_id,
@@ -94,6 +97,7 @@ updateItems.updateItems = (
 				setOrderDetails(response);
 
 				endItemsEditing();
+				generalUX.hideLoader();
 			});
 	}
 
@@ -165,6 +169,8 @@ updateItems.deleteSingleItem = (
 			newState[`item${index + 1}`] = false;
 			return newState;
 		});
+
+		generalUX.showLoader();
 		istanbul
 			.deleteItemInOrder(orderInfo.order_id, itemsInfo[index].item_id)
 			.then(() => {
@@ -178,6 +184,7 @@ updateItems.deleteSingleItem = (
 				}
 				setOrderDetails(response);
 				endItemsEditing();
+				generalUX.hideLoader();
 			});
 	}
 };

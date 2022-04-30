@@ -1,3 +1,5 @@
+import { generalUX } from "../../../../utils/generalUX";
+
 const updateCustomerNumber = {};
 
 updateCustomerNumber.startCustomerIdEditing = (
@@ -54,6 +56,7 @@ updateCustomerNumber.updateCustomerId = (
 	for (let i = 0; i < allCustomers.length; i++) {
 		if (updatedCustomerId === allCustomers[i].customer_id) {
 			editCustomerInput.style.boxShadow = "0px 0px 0px 2px green";
+			generalUX.showLoader();
 			istanbul
 				.putCustomerInOrder(
 					orderId,
@@ -72,6 +75,7 @@ updateCustomerNumber.updateCustomerId = (
 					}
 					setOrderDetails(response);
 					endCustomerIdEditing();
+					generalUX.hideLoader();
 				});
 			break;
 		} else {
